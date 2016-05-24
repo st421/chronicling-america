@@ -1,0 +1,15 @@
+{% extends "main_layout.html" %}
+{% block body %}
+<div class="container">
+	<div id='timeline-embed' style="width: 100%; height: 600px"></div>
+	<script type="application/javascript">
+		var topic = '{{ key_word|safe }}';
+		var topic = '{{ key_word }}';
+	    $(document).ready(function(){
+	        $.getJSON("/getTimelineData/".concat(topic),function(data){
+	            timeline = new TL.Timeline('timeline-embed', data, {debug:true});
+	        });
+	    });
+    </script>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "main_layout.html" %}
+{% block body %}
+<div class="container">
+	<h2>Search archived newspapers:</h2>
+	<form method="POST" action="/">
+    {{ form.key_word.label }} {{ form.key_word() }}
+    {{ form.submit() }}
+	</form>
+</div>
+{% endblock %}
