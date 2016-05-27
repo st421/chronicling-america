@@ -11,6 +11,7 @@
 		var embed = document.getElementById('timeline');
 		embed.style.height = getComputedStyle(document.body).height;
 		$.getJSON("/getTimelineData/".concat(topic),function(data){
+			// dragging not working??
 			window.timeline = new TL.Timeline('timeline', data, {timenav_height_percentage:15, timenav_height_min:100, marker_height_min:25});
 			window.addEventListener('resize', function() {
 				var embed = document.getElementById('timeline');
