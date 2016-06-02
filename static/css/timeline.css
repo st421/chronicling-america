@@ -1,6 +1,8 @@
 /*
-#CAEBF2 -- light blue
-#A9A9A9 -- carbon
+#CAEBF2 -- lightest blue
+#8DD4E3 -- light blue
+#474747 -- carbon
+#a9a9a9 -- gray
 #FF3B3F -- watermelon
 #EFEFEF -- neutral
 */
@@ -18,16 +20,16 @@
     line-height:30px;
 }
 .tl-timeline h2.tl-headline-title {
-    color: #474747;
+    color:#474747;
     font-size:40px;
     line-height:40px;   
 }
 .tl-timeline a {
-    color: #474747;
+    color:#474747;
 	text-decoration: none;  
 }
 .tl-timeline a:hover {
-    color: #8DD4E3;
+    color:#8DD4E3;
     text-decoration:underline;
 }
 .tl-text .tl-headline-date, .tl-text h3.tl-headline-date {

@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, render_template, jsonify, request, flash
+from flask import Flask, render_template, jsonify, request, flash, url_for
 from chron_am import searchUrl, retrieveRawData
 from timeline import Timeline
 from search_form import SearchForm
@@ -10,26 +10,33 @@ app = Flask(__name__)
 #TODO secret_key
 app.secret_key = 'some_secret'
 
-@app.route('/getTimelineData/<topic>', methods=['GET'])
+@app.route('/getTimelineData/<topic>')
 def getTimelineData(topic):
 	tl = Timeline(topic, json.loads(retrieveRawData(searchUrl(topic)))["items"])
 	timeline_data = {}
 	timeline_data["title"] = tl.getTitleSlide()
-	app.logger.debug("Title slide: %s", tl.getTitleSlide())
 	timeline_data["events"] = tl.getEventSlides()
-	app.logger.debug("Event slides: %s", tl.getEventSlides())
-	timeline_json = jsonify(timeline_data)
-	app.logger.debug("Converted JSON for timeline: %s", timeline_json)
-	return timeline_json
+	return jsonify(timeline_data)
 
 @app.route('/', methods=['GET','POST'])
 def main():
-	form = SearchForm(request.form)
 	if request.method == 'POST':
-		key_word = form.key_word.data
-		form.key_word.data = ''
-		return render_template('timeline.html', key_word=key_word)
+		form = SearchForm(request.form)
+		if form.validate():
+			key_word = form.key_word.data
+			year = form.year.data
+			if year is 0:
+				return render_template('timeline.html', key_word=key_word)
+			else:
+				return render_template('term-frequency-map.html', year=year, key_word=key_word)
+		else:
+			flash('Please enter a valid search topic')
+			return render_template('index.html', form=SearchForm())
 	else: 
+		form = SearchForm()
+		#form = SearchForm(key_word="taft", year=range(1836,1922))
+		#app.logger.debug(form.key_word())
+		#app.logger.debug(form.year())
 		return render_template('index.html', form=form) 
 
 if __name__ == "__main__":
