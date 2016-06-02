@@ -34,9 +34,6 @@ def main():
 			return render_template('index.html', form=SearchForm())
 	else: 
 		form = SearchForm()
-		#form = SearchForm(key_word="taft", year=range(1836,1922))
-		#app.logger.debug(form.key_word())
-		#app.logger.debug(form.year())
 		return render_template('index.html', form=form) 
 
 if __name__ == "__main__":
