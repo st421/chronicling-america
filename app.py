@@ -1,9 +1,9 @@
 import os
 import json
-from flask import Flask, render_template, jsonify, request, flash, url_for
-from chron_am import searchUrl, retrieveRawData
+from flask import Flask, render_template, jsonify, request, flash
+from utils import getTimelineJson, getMapJson
 from timeline import Timeline
-from search_form import SearchForm
+from forms import SearchForm
 
 app = Flask(__name__)
 #TODO form security
@@ -12,7 +12,7 @@ app.secret_key = 'some_secret'
 
 @app.route('/getTimelineData/<topic>')
 def getTimelineData(topic):
-	tl = Timeline(topic, json.loads(retrieveRawData(searchUrl(topic)))["items"])
+	tl = Timeline(topic, getTimelineJson(topic)["items"])
 	timeline_data = {}
 	timeline_data["title"] = tl.getTitleSlide()
 	timeline_data["events"] = tl.getEventSlides()
@@ -28,7 +28,7 @@ def main():
 			if year is 0:
 				return render_template('timeline.html', key_word=key_word)
 			else:
-				return render_template('term-frequency-map.html', year=year, key_word=key_word)
+				return render_template('term-frequency-map.html', key_word=key_word, year=year)
 		else:
 			flash('Please enter a valid search topic')
 			return render_template('index.html', form=SearchForm())

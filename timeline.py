@@ -1,4 +1,4 @@
-from chron_am import getBaseUrl
+from utils import getBaseUrl
 from flask import current_app
 
 class Timeline(object):
