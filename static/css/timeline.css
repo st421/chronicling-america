@@ -15,7 +15,7 @@
 /*.tl-timeline h1, .tl-timeline h2, .tl-timeline h3, .tl-timeline h4, .tl-timeline h5, .tl-timeline h6 {
     color:@color-header-text;
 }*/
-.tl-timeline h1, .tl-timeline h2, .tl-timeline h3 /*small*/{
+.tl-timeline h1, .tl-timeline h2, .tl-timeline h3 {
     font-size:30px;
     line-height:30px;
 }
@@ -61,12 +61,3 @@
 .tl-timemarker .tl-timemarker-line-left:after, .tl-timemarker .tl-timemarker-line-right:after {
     background-color:#CAEBF2;
 }
-
-/*
-.tl-timemarker .tl-timemarker-content-container
-.tl-timemarker .tl-timemarker-timespan, .tl-timemarker .tl-timemarker-timespan .tl-timemarker-timespan-content
-.tl-slide-media-only .tl-slide-content-container .tl-slide-content .tl-text
-*/
-/*.tl-slide-media-only .tl-slide-titleslide {
-	background-color:#333;
-}*/

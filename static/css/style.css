@@ -1,21 +1,24 @@
+body, html {
+    height:100%;
+    padding:0px;
+    margin:0px;
+}
 body {
     font-family:'Montserrat', sans-serif;
     background-color:#EFEFEF;
-    margin:0;
-    padding:0;
 }
-h1 {
+h4 {
     color:#474747;
     font-size:24px;
     line-height:24px;
 }
-h2, span.year {
+h5, span.year {
     color:#FF3B3F;
     font-family:'Fjalla One', sans-serif;
     font-size:30px;
     line-height:30px; 
 }
-h3 {
+h6 {
     font-size:16px;
     color:#CAEBF2;
 }
