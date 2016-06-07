@@ -17,6 +17,7 @@ def makeStateCounts(topic, year):
     data = retrieveData(mapSearchParams(topic, year))
     for page in data:
         topicByState[page["state"][0]] = topicByState.get(page["state"][0], 0) + 1
+    topicByState["max"] = sorted(topicByState.values(), reverse=True)[0]
     return topicByState
 
 def wordCountInOCR(topic, ocr):

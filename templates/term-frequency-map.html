@@ -10,11 +10,12 @@ svg {
   height:100%;
   fill:#bfb;
 }
+.bubble {
+  fill:#CAEBF2;
+  fill-opacity: .5;
+}
 #states {
   fill:#a9a9a9;
-}
-.state_name {
-  fill:#CAEBF2;
 }
 path {
   stroke:#EFEFEF;
@@ -49,14 +50,20 @@ path {
       states[startYear + i * 10] = topojson.feature(topologies[i], topologies[i].objects.stdin);
     }*/
     var states = topojson.feature(usMap, usMap.objects.stdin);
+    var radius = d3.scale.sqrt().domain([0, wordCounts["max"]]).range([0, 20]);
     
     svgStates.selectAll("path").data(states.features).enter().append("path").attr("d", path);
-    svgStates.selectAll(".state_name").data(states.features).enter()
+/*    svgStates.selectAll(".state_name").data(states.features).enter()
       .append("text")
       .attr("class","state_name")
       .attr("transform", function(d) { return "translate(" + path.centroid(d) +")"})
       .attr("dy", ".35em")
-      .text(function(d) { return wordCounts[d.id]; });
+      .text(function(d) { return wordCounts[d.id]; });*/
+      
+    svgStates.append("g").attr("class", "bubble").selectAll("circle")
+      .data(states.features).enter().append("circle")
+      .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+      .attr("r", function(d) { return radius(wordCounts[d.id]); })
   }
 </script>
 {% endblock %}

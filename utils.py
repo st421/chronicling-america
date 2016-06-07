@@ -33,7 +33,7 @@ def mapSearchParams(topic, year):
     return search_params
     
 def exception_handler(request, exception):
-    current_app.logger.debug("Unable to retrieve data: %s", exception)    
+    current_app.logger.debug("Unable to retrieve data from %s: %s", request.path_url, exception)    
 
 def retrieveData(params):
     session = Session()
@@ -47,10 +47,10 @@ def retrieveData(params):
     for page_num in range(2,pages):
         #params["page"] = str(page_num)
         #reps.extend(session.get(SEARCH_URL, params=params).json()["items"])
-        reqs.append(grequests.request('GET', SEARCH_URL+"page={}".format(page_num), timeout=10, params=params, session=session))
+        reqs.append(grequests.request('GET', SEARCH_URL+"page={}".format(page_num), timeout=30, params=params, session=session))
     #rs = (grequests.get(u) for u in urls)
     #def imap(requests, stream=False, size=2, exception_handler=None)
-    for resp in grequests.imap(reqs, False, 3, exception_handler=exception_handler):
+    for resp in grequests.imap(reqs, False, 5, exception_handler=exception_handler):
         print(resp.request.path_url)
         reps.extend(resp.json()["items"])
     return reps
