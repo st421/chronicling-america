@@ -1,58 +1,56 @@
-import sys
-import json
-from urllib2 import Request, urlopen, URLError
 from flask import current_app
+from time import gmtime, strftime
+from requests import Session
+import grequests
+import math
 
 BASE_URL = "http://chroniclingamerica.loc.gov"
-SEARCH_URL = '{}/search/pages/results/?'.format(BASE_URL)
-
-search_params = {}
-search_params['format'] = 'json'
-search_params['page'] = '1'
-search_params['sequence'] = '0'
-search_params['rows'] = '20'
-search_params['date1'] = ''
-search_params['date2'] = ''
-search_params['dateFilterType'] = ''
+SEARCH_URL = "{}/search/pages/results/?".format(BASE_URL)
 
 def getBaseUrl():
     return BASE_URL
     
-def timelineSearchUrl(topic):
-    search_params['sort'] = 'date'
-    return searchUrl(topic)
+def searchParams():
+    search_params = {
+        "sort":"relevance",
+        "rows":"50",
+        "sequence":"1",
+        "format":"json",
+    }
+    return search_params
+    
+def timelineSearchParams(topic):
+    search_params = searchParams()
+    search_params["andtext"] = topic
+    return search_params
    
-def mapSearchUrl(topic, year):
-    search_params['sort'] = 'state'
-    search_params['dateFilterType'] = 'yearRange'
-    search_params['date1'] = year
-    search_params['date2'] = year
-    return searchUrl(topic)
+def mapSearchParams(topic, year):
+    search_params = timelineSearchParams(topic)
+    #search_params["sort"] = "state"
+    search_params["dateFilterType"] = "yearRange"
+    search_params["date1"] = year
+    search_params["date2"] = year
+    return search_params
+    
+def exception_handler(request, exception):
+    current_app.logger.debug("Unable to retrieve data: %s", exception)    
 
-def searchUrl(topic, **kwargs):
-    this_search = SEARCH_URL
-    search_params['protext'] = topic
-    for k, v in kwargs.items():
-        if search_params.has_key(k):
-            search_params[k] = v
-    for k, v in search_params.items():
-        this_search += ('&{}={}'.format(k,v))
-    return this_search
-    
-def retrieveRawData(url):
-    current_app.logger.debug("Retrieving data from %s", url)
-    request = Request(url)
-    try:
-    	response = urlopen(request)
-        return response.read()
-    except URLError, e:
-        current_app.logger.debug("Unable to retrieve data: %s", e)
-        
-def loadJson(url):
-    return json.loads(retrieveRawData(url))
-        
-def getTimelineJson(topic):
-    return loadJson(timelineSearchUrl(topic))
-    
-def getMapJson(topic, year):
-    return loadJson(mapSearchUrl(topic, year))
+def retrieveData(params):
+    session = Session()
+    page_1 = session.get(SEARCH_URL, params=params)
+    total_items = page_1.json()["totalItems"]
+    pages = int(math.ceil(total_items/50))
+    if(pages > 100): pages = 100
+    reqs = []
+    reps = []
+    reps.extend(page_1.json()["items"])
+    for page_num in range(2,pages):
+        #params["page"] = str(page_num)
+        #reps.extend(session.get(SEARCH_URL, params=params).json()["items"])
+        reqs.append(grequests.request('GET', SEARCH_URL+"page={}".format(page_num), timeout=10, params=params, session=session))
+    #rs = (grequests.get(u) for u in urls)
+    #def imap(requests, stream=False, size=2, exception_handler=None)
+    for resp in grequests.imap(reqs, False, 3, exception_handler=exception_handler):
+        print(resp.request.path_url)
+        reps.extend(resp.json()["items"])
+    return reps
