@@ -1,0 +1,2 @@
+--Maybe have a thing where either the map is split up and states with top results are shown with quotes next to them OR that when
+you click on a state, some top quotes show up next to the state or something like that

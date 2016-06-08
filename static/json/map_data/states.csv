@@ -1,81 +1,82 @@
-name,abbreviation
-Alabama,AL
-Alaska,AK
-Arizona,AZ
-Arkansas,AR
-California,CA
-Colorado,CO
-Connecticut,CT
-Delaware,DE
-Florida,FL
-Georgia,GA
-Hawaii,HI
-Idaho,ID
-Illinois,IL
-Indiana,IN
-Iowa,IA
-Kansas,KS
-Kentucky,KY
-Louisiana,LA
-Maine,ME
-Maryland,MD
-Massachusetts,MA
-Michigan,MI
-Minnesota,MN
-Mississippi,MS
-Missouri,MO
-Montana,MT
-Nebraska,NE
-Nevada,NV
-New Hampshire,NH
-New Jersey,NJ
-New Mexico,NM
-New York,NY
-North Carolina,NC
-North Dakota,ND
-Ohio,OH
-Oklahoma,OK
-Oregon,OR
-Pennsylvania,PA
-Rhode Island,RI
-South Carolina,SC
-South Dakota,SD
-Tennessee,TN
-Texas,TX
-Utah,UT
-Vermont,VT
-Virginia,VA
-Washington,WA
-West Virginia,WV
-Wisconsin,WI
-Wyoming,WY
-Northwest Territory,NW
-Southwest Territory,SW
-Mississippi Territory,MS
-Indiana Territory,IN
-Orleans Territory,LA
-Michigan Territory,MI
-Illinois Territory,IL
-Missouri Territory,MO
-Arkansas Territory,AR
-Unorganized Territory,X
-Florida Territory,FL
-Wisconsin Territory,WI
-Iowa Territory,IA
-New Mexico Territory,NM
-Oregon Territory,OR
-Minnesota Territory,MN
-Utah Territory,UT
-Kansas Territory,KS
-Nebraska Territory,NE
-Dakota Territory,DK
-Washington Territory,WA
-Wyoming Territory,WY
-Colorado Territory,CO
-Arizona Territory,AZ
-Montana Territory,MT
-Indian Territory,IT
-Idaho Territory,ID
-Alaska Territory,AK
-Oklahoma Territory,OK
-Hawaii Territory,HI
+id,name,abbreviation,admitted
+1,Delaware,DE,1787
+2,Pennsylvania,PA,1787
+3,New Jersey,NJ,1787
+4,Georgia,GA,1788
+5,Connecticut,CT,1788
+6,Massachusetts,MA,1788
+7,Maryland,MD,1788
+8,South Carolina,SC,1788
+9,New Hampshire,NH,1788
+10,Virginia,VA,1788
+11,New York,NY,1788
+12,North Carolina,NC,1789
+13,Rhode Island,RI,1790
+14,Vermont,VT,1791
+15,Kentucky,KY,1792
+16,Tennessee,TN,1796
+17,Ohio,OH,1803
+18,Louisiana,LA,1812
+19,Indiana,IN,1816
+20,Mississippi,MS,1817
+21,Illinois,IL,1818
+22,Alabama,AL,1819
+23,Maine,ME,1820
+24,Missouri,MO,1821
+25,Arkansas,AR,1836
+26,Michigan,MI,1837
+27,Florida,FL,1845
+28,Texas,TX,1845
+29,Iowa,IA,1846
+30,Wisconsin,WI,1848
+31,California,CA,1850
+32,Minnesota,MN,1858
+33,Oregon,OR,1859
+34,Kansas,KS,1861
+35,West Virginia,WV,1863
+36,Nevada,NV,1864
+37,Nebraska,NE,1867
+38,Colorado,CO,1876
+39,North Dakota,ND,1889
+40,South Dakota,SD,1889
+41,Montana,MT,1889
+42,Washington,WA,1890
+43,Idaho,ID,1890
+44,Wyoming,WY,1890
+45,Utah,UT,1896
+46,Oklahoma,OK,1907
+47,New Mexico,NM,1912
+48,Arizona,AZ,1912
+49,Alaska,AK,1959
+50,Hawaii,HI,1959
+51,Southwest Territory,SW,0
+52,Northwest Territory,NW,0
+53,Orleans Territory,LA,0
+54,Indiana Territory,IN,0
+55,Mississippi Territory,MS,0
+56,Illinois Territory,IL,0
+57,Missouri Territory,MO,0
+58,Arkansas Territory,AR,0
+59,Michigan Territory,MI,0
+60,Florida Territory,FL,0
+61,Iowa Territory,IA,0
+62,Wisconsin Territory,WI,0
+63,Unorganized Territory,X,0
+64,Minnesota Territory,MN,0
+65,Oregon Territory,OR,0
+66,Kansas Territory,KS,0
+67,Nebraska Territory,NE,0
+68,Colorado Territory,CO,0
+69,Dakota Territory,DK,0
+70,Montana Territory,MT,0
+71,Washington Territory,WA,0
+72,Idaho Territory,ID,0
+73,Wyoming Territory,WY,0
+74,Utah Territory,UT,0
+75,Oklahoma Territory,OK,0
+76,Indian Territory,IT,0
+77,New Mexico Territory,NM,0
+78,Arizona Territory,AZ,0
+79,Alaska Territory,AK,0
+80,Hawaii Territory,HI,0
+81,District of Columbia,DC,1801
