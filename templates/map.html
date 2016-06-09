@@ -16,8 +16,12 @@ svg {
 .territory {
   fill:#c3c3c3;
 }
-.bubble {
+.bubble-1 {
   fill:#CAEBF2;
+  fill-opacity:.6;
+}
+.bubble-2 {
+  fill:#FF3B3F;
   fill-opacity:.6;
 }
 path {
@@ -40,10 +44,11 @@ path {
 	
 	d3_queue.queue()
   .defer(d3.json, "/static/map-data/json/".concat(censusYear).concat(".json"))
-  .defer(d3.json, "/getMapData/".concat(selectedYear))
+  .defer(d3.json, "/candidate_1/".concat(selectedYear))
+  .defer(d3.json, "/candidate_2/".concat(selectedYear))
   .await(analyze);
 
-  function analyze(error, usMap, byStateData) {//wordCounts, 
+  function analyze(error, usMap, byStateData1, byStateData2) {//wordCounts, 
     if(error) { console.log(error); }
     //console.log(byStateData);
 /*    for (var i = 0; i < topologies.length; i++) {
@@ -56,10 +61,15 @@ path {
     /*svgStates.selectAll(".us_element").data(us_elements.features).enter()
       .attr("class","us_element")*/
 
-    svgStates.append("g").attr("class", "bubble").selectAll("circle")
+    svgStates.append("g").attr("class", "bubble-1").selectAll("circle")
       .data(us_elements.features).enter().append("circle")
       .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
-      .attr("r", function(d) { return getRadius(d, byStateData); })
+      .attr("r", function(d) { return getRadius(d, byStateData1); })
+      
+    svgStates.append("g").attr("class", "bubble-2").selectAll("circle")
+      .data(us_elements.features).enter().append("circle")
+      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), getRadius(d, byStateData2)) + ")"; })
+      .attr("r", function(d) { return getRadius(d, byStateData2); })
 /*      
       svgStates.selectAll(".us_element").data(states.features).enter()
       .append("text")
@@ -70,6 +80,11 @@ path {
       
       
 */
+  }
+  
+  function adjustCenter(c, amt) {
+    console.log(c);
+    return [c[0],c[1] - amt];
   }
   
   function getRadius(us_element, data_set) {

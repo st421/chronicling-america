@@ -19,9 +19,15 @@ def getTimelineData(topic):
 	#timeline_data["events"] = tl.getEventSlides()
 	return jsonify(timeline_data)
 	
-@app.route('/getMapData/<year>')
-def getMapData(year):
+@app.route('/candidate_1/<year>')
+def candidate_1(year):
 	js = retrieveData(candidateSearchParams(year, "Grover", "Cleveland"))
+	state_counts = makeStateCounts(js)
+	return jsonify(state_counts)
+	
+@app.route('/candidate_2/<year>')
+def candidate_2(year):
+	js = retrieveData(candidateSearchParams(year, "James", "Blaine"))
 	state_counts = makeStateCounts(js)
 	return jsonify(state_counts)
 	
