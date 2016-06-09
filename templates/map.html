@@ -38,7 +38,7 @@ path {
 	
 	d3_queue.queue()
   //.defer(d3.json, "/getMapData/".concat(topic).concat("/").concat(selectedYear))
-  .defer(d3.json, "/static/json/map_data/".concat(censusYear).concat(".json"))
+  .defer(d3.json, "/static/map-data/json/".concat(censusYear).concat(".json"))
   .await(analyze);
 
   function analyze(error, usMap) {//wordCounts, 

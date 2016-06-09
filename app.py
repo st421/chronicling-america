@@ -35,7 +35,7 @@ def main():
 			if year is 0:
 				return render_template('timeline.html', key_word=key_word)
 			else:
-				return render_template('term-frequency-map.html', key_word=key_word, year=year)
+				return render_template('map.html', key_word=key_word, year=year)
 		else:
 			flash('Please enter a valid search topic')
 			return render_template('index.html', form=SearchForm())
