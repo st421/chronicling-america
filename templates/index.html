@@ -1,8 +1,7 @@
 {% extends "main_layout.html" %}
 {% block body %}
-<h4>Search archived newspapers:</h4>
+<h4>Choose an election year:</h4>
 <form method="POST" action="/">
-{{ form.key_word.label }} {{ form.key_word() }}
 {{ form.year.label }} {{ form.year() }}
 {{ form.submit() }}
 </form>

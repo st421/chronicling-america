@@ -27,7 +27,6 @@ path {
 </svg>
 <h4 class="center">the United States in <span class="year">{{year}}</span></h4>
 <script>
-  var topic = "{{key_word|safe}}";
   var selectedYear = "{{year|safe}}";
   var censusYear = Math.round(selectedYear/10)*10;
   var svgStates = d3.select("svg #states");
