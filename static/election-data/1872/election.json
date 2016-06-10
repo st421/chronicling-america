@@ -1,0 +1,20 @@
+{
+    "year":"1872", 
+    "candidates":[
+        {
+            "first":"Horace",
+            "last":"Greeley",
+            "party":"Democratic",
+            "state":"NY",
+            "won":["DE","GA","KY","LA","MD","NJ","NY","OR"]
+        },
+        {
+            "first":"Ulysses S.",
+            "last":"Grant",
+            "party":"Republican",
+            "state":"IL",
+            "won":["AL","CA","CT","DE","FL","IL","IN","IA","KS","ME","MA","MI","MN","MS","NE","NV","NH","NJ","NY","NC","OH","OR","PA","RI","SC","VT","VA","WV","WI"]
+        }
+    ],
+    "winner":"Grant"
+}

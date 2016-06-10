@@ -1,0 +1,20 @@
+{
+    "year":"1908", 
+    "candidates":[
+        {
+            "first":"William J.",
+            "last":"Bryan",
+            "party":"Democratic",
+            "state":"NE",
+            "won":["AL","AR","CO","FL","GA","KY","LA","MD","MS","NE","NV","NC","OK","SC","TN","TX","VA"]
+        },
+        {
+            "first":"William H.",
+            "last":"Taft",
+            "party":"Republican",
+            "state":"OH",
+            "won":["CA","CT","DE","ID","IL","IN","IA","KS","ME","MD","MA","MI","MN","MO","MT","NH","NJ","NY","ND","OH","OR","PA","RI","SD","UT","VT","WA","WV","WI","WY"]
+        }
+    ],
+    "winner":"Taft"
+}

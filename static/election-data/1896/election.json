@@ -1,0 +1,20 @@
+{
+    "year":"1896", 
+    "candidates":[
+        {
+            "first":"William J.",
+            "last":"Bryan",
+            "party":"Democratic",
+            "state":"NE",
+            "won":["AL","AR","CO","FL","GA","ID","KS","LA","MS","MO","MT","NE","NV","NC","SC","SD","TN","TX","UT","VA","WA","WY"]
+        },
+        {
+            "first":"William",
+            "last":"McKinley",
+            "party":"Republican",
+            "state":"OH",
+            "won":["CA","CT","DE","IL","IN","IA","KY","ME","MD","MA","MI","MN","NH","NJ","NY","ND","OH","OR","PA","RI","VT","WV","WI"]
+        }
+    ],
+    "winner":"McKinley"
+}

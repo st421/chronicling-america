@@ -1,0 +1,20 @@
+{
+    "year":"1888", 
+    "candidates":[
+        {
+            "first":"Grover",
+            "last":"Cleveland",
+            "party":"Democratic",
+            "state":"NY",
+            "won":["AL","AR","CT","DE","FL","GA","KY","LA","MD","MS","MO","NJ","NC","SC","TN","TX","VA","WV"]
+        },
+        {
+            "first":"Benjamin",
+            "last":"Harrison",
+            "party":"Republican",
+            "state":"IN",
+            "won":["CA","CO","IL","IN","IA","KS","ME","MA","MI","MN","NE","NV","NH","NY","OH","OR","PA","RI","VT","WI"]
+        }
+    ],
+    "winner":"Harrison"
+}

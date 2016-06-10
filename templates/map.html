@@ -36,6 +36,10 @@ path {
 <h4 class="center">the United States in <span class="year">{{year}}</span></h4>
 <script>
   var selectedYear = "{{year|safe}}";
+  var c1f = "{{candidates[0].first}}";
+  var c1l = "{{candidates[0].last}}";
+  var c2f = "{{candidates[1].first}}";
+  var c2l = "{{candidates[1].last}}";
   var censusYear = Math.round(selectedYear/10)*10;
   var svgStates = d3.select("svg #states");
   var width = window.innerWidth,height = window.innerHeight;
@@ -44,8 +48,8 @@ path {
 	
 	d3_queue.queue()
   .defer(d3.json, "/static/map-data/json/".concat(censusYear).concat(".json"))
-  .defer(d3.json, "/candidate_1/".concat(selectedYear))
-  .defer(d3.json, "/candidate_2/".concat(selectedYear))
+  .defer(d3.json, "/getMediaData/".concat(selectedYear).concat("/").concat(c1f).concat("/").concat(c1l))
+  .defer(d3.json, "/getMediaData/".concat(selectedYear).concat("/").concat(c2f).concat("/").concat(c2l))
   .await(analyze);
 
   function analyze(error, usMap, byStateData1, byStateData2) {//wordCounts, 

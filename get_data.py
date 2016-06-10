@@ -1,12 +1,14 @@
-from flask import current_app
-from time import gmtime, strftime
+import json
+import re
+from string import punctuation
+from operator import itemgetter
 from requests import Session
 import grequests
 import math
+from election import Election
 
 BASE_URL = "http://chroniclingamerica.loc.gov"
 SEARCH_URL = "{}/search/pages/results/?".format(BASE_URL)
-MAX_PAGES = 5
 ITEMS_PER_PAGE = 50
 TIMEOUT = 30
 REQ_THREADS = 5
@@ -14,23 +16,13 @@ REQ_THREADS = 5
 OR_TERMS = ["elect","election","presidential","president","candidate","party"]
 AND_TERMS = ["president","election","candidate"]
 PROX_DIST = 5
-'''
-import ijson
 
-f = urlopen('http://.../')
-objects = ijson.items(f, 'earth.europe.item')
-cities = (o for o in objects if o['type'] == 'city')
-for city in cities:
-    do_something_with(city)
-    
-'''
-
-'''
-dateFilterType=range
-date1=01%2F01%2F1884
-date2=11%2F30%2F1884
-sequence=1
-'''
+def loadElectionData(year):
+	with open('static/election-data/{}/election.json'.format(year)) as f:
+		js = json.load(f)
+		e = Election(**js)
+		return e
+		
 def createTextSearchParams(terms):
     params = terms[0]
     for term in terms[1:]:
@@ -63,27 +55,46 @@ def candidateSearchParams(year, first, last):
     return search_params
     
 def exception_handler(request, exception):
-    current_app.logger.error("Unable to retrieve data from %s: %s", request.path_url, exception)    
+    print("Unable to retrieve data from %s: %s", request.path_url)    
+    print(exception)
     
-def startChronAmSearch(e, callback):
-    session = Session()
-    results = []
-    for candidate in e.candidates:
-        startRetrieve(candidateSearchParams(e.year, candidate.first, candidate.last), session, callback)
+def makeStateCounts(data):
+    topicByState = {}
+    for page in data:
+        topicByState[page["state"][0]] = topicByState.get(page["state"][0], 0) + 1
+    topicByState["max"] = sorted(topicByState.values(), reverse=True)[0]
+    return topicByState
+   
+def writeElectionMedia(year, candidate, js): 
+    for page in js:
+        page["ocr_eng"] = ""
+    with open('static/election-data/{}/chronam-{}.json'.format(year,candidate),'w') as f:
+        json.dump(js,f)
+    state_counts = makeStateCounts(js)
+    with open('static/election-data/{}/stats-{}.json'.format(year,candidate),'w') as f:
+        json.dump(state_counts,f)
 
-def startRetrieve(params, session=Session(), callback=None):
+def getElectionMedia(params, session=Session()):
     page_1 = session.get(SEARCH_URL, params=params)
     first_json = page_1.json()
     total_items = first_json["totalItems"]
     pages = int(math.ceil(float(total_items)/ITEMS_PER_PAGE))
-    if(pages > MAX_PAGES): pages = MAX_PAGES
     reqs = []
     resps = []
     resps.extend(first_json["items"])
     for page in range(2,pages+1):
-        #params["page"] = str(page_num)
         reqs.append(grequests.request('GET', SEARCH_URL+"page={}".format(page), timeout=TIMEOUT, params=params, session=session))
     for resp in grequests.imap(reqs, False, REQ_THREADS, exception_handler=exception_handler):
-        current_app.logger.debug("Requesting data from %s", resp.request.path_url)
+        print("Requesting data from %s", resp.request.path_url)
         resps.extend(resp.json()["items"])
     return resps
+    
+def getAndWriteElectionMedia(e):
+    session = Session()
+    results = []
+    for candidate in e.candidates:
+        writeElectionMedia(e.year, candidate.last, getElectionMedia(candidateSearchParams(e.year, candidate.first, candidate.last), session))
+    
+for i in range(1840,1924,4):
+    e = loadElectionData(i)
+    getAndWriteElectionMedia(e)

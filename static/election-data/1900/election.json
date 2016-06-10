@@ -1,0 +1,20 @@
+{
+    "year":"1900", 
+    "candidates":[
+        {
+            "first":"William J.",
+            "last":"Bryan",
+            "party":"Democratic",
+            "state":"NE",
+            "won":["AL","AR","CO","FL","GA","ID","KY","LA","MS","MO","MT","NV","NC","SC","TN","TX","VA"]
+        },
+        {
+            "first":"William",
+            "last":"McKinley",
+            "party":"Republican",
+            "state":"OH",
+            "won":["CA","CT","DE","IL","IN","IA","KS","ME","MD","MA","MI","MN","NE","NH","NJ","NY","ND","OH","OR","PA","RI","SD","UT","VT","WA","WV","WI","WY"]
+        }
+    ],
+    "winner":"McKinley"
+}

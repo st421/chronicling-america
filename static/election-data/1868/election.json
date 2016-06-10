@@ -1,0 +1,20 @@
+{
+    "year":"1868", 
+    "candidates":[
+        {
+            "first":"Horatio",
+            "last":"Seymour",
+            "party":"Democratic",
+            "state":"NY",
+            "won":["DE","GA","KY","LA","MD","NJ","NY","OR"]
+        },
+        {
+            "first":"Ulysses S.",
+            "last":"Grant",
+            "party":"Republican",
+            "state":"IL",
+            "won":["AL","AR","CA","CT","FL","IL","IN","IA","KS","ME","MA","MI","MN","MO","NE","NV","NH","NC","OH","PA","RI","SC","TN","VT","WV","WI"]
+        }
+    ],
+    "winner":"Grant"
+}

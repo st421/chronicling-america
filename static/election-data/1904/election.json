@@ -1,0 +1,20 @@
+{
+    "year":"1904", 
+    "candidates":[
+        {
+            "first":"Alton B.",
+            "last":"Parker",
+            "party":"Democratic",
+            "state":"NY",
+            "won":["AL","AR","FL","GA","KY","LA","MD","MS","NC","SC","TN","TX","VA"]
+        },
+        {
+            "first":"Theodore",
+            "last":"Roosevelt",
+            "party":"Republican",
+            "state":"NY",
+            "won":["CA","CO","CT","DE","ID","IL","IN","IA","KS","ME","MD","MA","MI","MN","MO","MT","NE","NV","NH","NJ","NY","ND","OH","OR","PA","RI","SD","UT","VT","WA","WV","WI","WY"]
+        }
+    ],
+    "winner":"Roosevelt"
+}

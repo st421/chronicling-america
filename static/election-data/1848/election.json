@@ -1,0 +1,20 @@
+{
+    "year":"1848", 
+    "candidates":[
+        {
+            "first":"Lewis",
+            "last":"Cass",
+            "party":"Democratic",
+            "state":"MI",
+            "won":["AL","AR","IL","IN","IA","ME","MI","MS","MO","NH","OH","SC","TX","VA","WI"]
+        },
+        {
+            "first":"Zachary",
+            "last":"Taylor",
+            "party":"Whig",
+            "state":"LA",
+            "won":["CT","DE","FL","GA","KY","LA","MD","MA","NJ","NY","NC","PA","RI","TN","VT"]
+        }
+    ],
+    "winner":"Taylor"
+}

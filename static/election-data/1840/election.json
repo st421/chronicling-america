@@ -1,0 +1,20 @@
+{
+    "year":"1840", 
+    "candidates":[
+        {
+            "first":"Martin",
+            "last":"Van Buren",
+            "party":"Democratic",
+            "state":"NY",
+            "won":["AL","AR","IL","MO","NH","SC","VA"]
+        },
+        {
+            "first":"William Henry",
+            "last":"Harrison",
+            "party":"Whig",
+            "state":"OH",
+            "won":["CT","DE","GA","IN","KY","LA","ME","MD","MA","MI","MS","NJ","NY","NC","OH","PA","RI","TN","VT"]
+        }
+    ],
+    "winner":"Harrison"
+}
