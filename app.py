@@ -21,11 +21,11 @@ def frontPage():
 	return render_template('index.html', form=SearchForm())
 	
 def loadElectionData(year):
-	with app.open_resource('static/election-data/{}.json'.format(year)) as f:
+	with app.open_resource('static/election-data/{}/election.json'.format(year)) as f:
 		js = json.load(f)
 		e = Election(**js)
 		return e
-		
+'''		
 @app.route('/getTimelineData/<topic>')
 def getTimelineData(topic):
 	#tl = Timeline(topic, retrieveData(timelineSearchParams(topic)))
@@ -39,7 +39,7 @@ def getMediaData(year, first, last):
 	js = startRetrieve(candidateSearchParams(year, first, last))
 	state_counts = makeStateCounts(js)
 	return jsonify(state_counts)
-
+'''
 @app.route('/', methods=['GET','POST'])
 def main():
 	if request.method == 'POST':
@@ -47,8 +47,7 @@ def main():
 		if form.validate():
 			year = form.year.data
 			e = loadElectionData(year)
-			#startChronAmSearch(e, TODO)
-			return render_template('map.html', year=year, candidates=e.candidates)
+			return render_template('map.html', e=e)
 		else:
 			flash('Please choose an election year')
 			return frontPage()

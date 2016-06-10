@@ -16,7 +16,7 @@ svg {
 .territory {
   fill:#c3c3c3;
 }
-.bubble-1 {
+.bubble {
   fill:#CAEBF2;
   fill-opacity:.6;
 }
@@ -33,47 +33,27 @@ path {
 <svg>
   <g id="states" class="center"></g>
 </svg>
-<h4 class="center">the United States in <span class="year">{{year}}</span></h4>
+<h4 class="center">the election of <span class="year">{{e.year}}</span></h4>
 <script>
-  var selectedYear = "{{year|safe}}";
-  var c1f = "{{candidates[0].first}}";
-  var c1l = "{{candidates[0].last}}";
-  var c2f = "{{candidates[1].first}}";
-  var c2l = "{{candidates[1].last}}";
-  var censusYear = Math.round(selectedYear/10)*10;
+  var year = {{e.year}};
   var svgStates = d3.select("svg #states");
   var width = window.innerWidth,height = window.innerHeight;
   var projection = d3.geo.albersUsa().translate([width/2,height/2]);
   var path = d3.geo.path().projection(projection);
-	
-	d3_queue.queue()
-  .defer(d3.json, "/static/map-data/json/".concat(censusYear).concat(".json"))
-  .defer(d3.json, "/getMediaData/".concat(selectedYear).concat("/").concat(c1f).concat("/").concat(c1l))
-  .defer(d3.json, "/getMediaData/".concat(selectedYear).concat("/").concat(c2f).concat("/").concat(c2l))
-  .await(analyze);
+  var us_elements;
+  d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").await(makeMap);
+  {% for candidate in e.candidates %}
+  d3_queue.queue()
+    .defer(d3.json, "{{e.getCandidateChronamPath(candidate)}}")
+    .defer(d3.json, "{{e.getCandidateStatsPath(candidate)}}")
+    .await(addCandidate);
+  {% endfor %}
 
-  function analyze(error, usMap, byStateData1, byStateData2) {//wordCounts, 
+  function makeMap(error, usMap) {
     if(error) { console.log(error); }
-    //console.log(byStateData);
-/*    for (var i = 0; i < topologies.length; i++) {
-      states[startYear + i * 10] = topojson.feature(topologies[i], topologies[i].objects.stdin);
-    }*/
-    var us_elements = topojson.feature(usMap, usMap.objects.stdin);
+    us_elements = topojson.feature(usMap, usMap.objects.stdin);
+    svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return isState(d); });
 
-    svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path)
-    .attr("class",function(d) { return isState(d); });
-    /*svgStates.selectAll(".us_element").data(us_elements.features).enter()
-      .attr("class","us_element")*/
-
-    svgStates.append("g").attr("class", "bubble-1").selectAll("circle")
-      .data(us_elements.features).enter().append("circle")
-      .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
-      .attr("r", function(d) { return getRadius(d, byStateData1); })
-      
-    svgStates.append("g").attr("class", "bubble-2").selectAll("circle")
-      .data(us_elements.features).enter().append("circle")
-      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), getRadius(d, byStateData2)) + ")"; })
-      .attr("r", function(d) { return getRadius(d, byStateData2); })
 /*      
       svgStates.selectAll(".us_element").data(states.features).enter()
       .append("text")
@@ -81,9 +61,16 @@ path {
       .attr("transform", function(d) { return "translate(" + path.centroid(d) +")"})
       .attr("dy", ".35em")
       .text(function(d) { return wordCounts[d.id]; }); 
-      
-      
 */
+  }
+  
+  function addCandidate(error, chronAm, stats) {
+    if(error) { console.log(error); }
+    console.log(stats);
+    svgStates.append("g").attr("class", "bubble").selectAll("circle")
+      .data(us_elements.features).enter().append("circle")
+      .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+      .attr("r", function(d) { return getRadius(d, stats); })
   }
   
   function adjustCenter(c, amt) {
@@ -102,7 +89,7 @@ path {
   
   function isState(us_element) {
     var class_name, admit = us_element.properties.admit; 
-    if(admit != 0 && admit <= selectedYear) {
+    if(admit != 0 && admit <= year) {
       class_name = "state";
     } else {
       class_name = "territory";
