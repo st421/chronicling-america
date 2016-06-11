@@ -25,7 +25,7 @@ def loadElectionData(year):
 		js = json.load(f)
 		e = Election(**js)
 		return e
-'''		
+	
 @app.route('/getTimelineData/<topic>')
 def getTimelineData(topic):
 	#tl = Timeline(topic, retrieveData(timelineSearchParams(topic)))
@@ -33,13 +33,7 @@ def getTimelineData(topic):
 	#timeline_data["title"] = tl.getTitleSlide()
 	#timeline_data["events"] = tl.getEventSlides()
 	return jsonify(timeline_data)
-	
-@app.route('/getMediaData/<year>/<first>/<last>')
-def getMediaData(year, first, last):
-	js = startRetrieve(candidateSearchParams(year, first, last))
-	state_counts = makeStateCounts(js)
-	return jsonify(state_counts)
-'''
+
 @app.route('/', methods=['GET','POST'])
 def main():
 	if request.method == 'POST':

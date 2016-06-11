@@ -16,18 +16,22 @@ svg {
 .territory {
   fill:#c3c3c3;
 }
-.bubble {
-  fill:#CAEBF2;
-  fill-opacity:.6;
-}
-.bubble-2 {
-  fill:#FF3B3F;
-  fill-opacity:.6;
-}
 path {
   stroke:#EFEFEF;
   stroke-linejoin:round;
   stroke-linecap:round;
+}
+.red, .blue {
+  fill-opacity:.6;
+}
+.red {
+  fill:#FF3B3F;
+}
+.blue {
+  fill:#CAEBF2;
+}
+.red :hover, .blue :hover {
+  fill-opacity:.8;
 }
 </style>
 <svg>
@@ -42,12 +46,7 @@ path {
   var path = d3.geo.path().projection(projection);
   var us_elements;
   d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").await(makeMap);
-  {% for candidate in e.candidates %}
-  d3_queue.queue()
-    .defer(d3.json, "{{e.getCandidateChronamPath(candidate)}}")
-    .defer(d3.json, "{{e.getCandidateStatsPath(candidate)}}")
-    .await(addCandidate);
-  {% endfor %}
+  d3_queue.queue(){% for candidate in e.candidates %}.defer(d3.json, "{{e.getCandidateStatsPath(candidate)}}"){% endfor %}.await(addStats);
 
   function makeMap(error, usMap) {
     if(error) { console.log(error); }
@@ -64,13 +63,20 @@ path {
 */
   }
   
-  function addCandidate(error, chronAm, stats) {
+  function addStats(error, c1Stats, c2Stats) {
     if(error) { console.log(error); }
+    addBubbles(c1Stats, "red");
+    addBubbles(c2Stats, "blue");
+  }
+  
+  function addBubbles(stats, color) {
     console.log(stats);
-    svgStates.append("g").attr("class", "bubble").selectAll("circle")
+    svgStates.append("g").attr("class",color).selectAll("circle")
       .data(us_elements.features).enter().append("circle")
       .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
       .attr("r", function(d) { return getRadius(d, stats); })
+      .attr("href", function(d) { return "";})
+      .append("title").text(function(d) { return d.properties.name + "\nClick for timeline of coverage";});
   }
   
   function adjustCenter(c, amt) {
