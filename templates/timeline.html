@@ -5,11 +5,13 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/timeline.css') }}">
 <script type="text/javascript" src="//cdn.knightlab.com/libs/timeline3/3.3.15/js/timeline-min.js"></script>
 <script>
-	var topic = "{{key_word|safe}}";
+	var year = {{year|safe}};
+	var candidate = "{{name|safe}}";
+	var state = "{{state|safe}}";
 	$(document).ready(function(){
 		var embed = document.getElementById("timeline");
 		embed.style.height = getComputedStyle(document.body).height;
-		$.getJSON("/getTimelineData/".concat(topic),function(data){
+		$.getJSON("/getTimelineData/".concat(year).concat("/").concat(candidate).concat("/").concat(state),function(data){
 			var options = {
 				timenav_height_percentage:15, 
 				timenav_height_min:100, 

@@ -3,10 +3,10 @@ from flask import current_app
 
 class Timeline(object):
 
-    def __init__(self, topic, items):
-        current_app.logger.debug("Creating timeline for topic: %s", topic)
+    def __init__(self, year, candidate, items):
+        current_app.logger.debug("Creating timeline for %s in %s", candidate, year)
         
-        self.titleSlide = TimelineSlide(topic)
+        self.titleSlide = TimelineSlide('{} | {}'.format(candidate, year))
         self.event_list = []
         
         for page in items:

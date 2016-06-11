@@ -21,8 +21,8 @@ class Election(object):
     def getCandidateChronamPath(self, candidate):
         return "static/election-data/{}/{}".format(self.year, candidate.getChronamFile())
         
-    def getCandidateStatsPath(self, candidate):
-        return "static/election-data/{}/{}".format(self.year, candidate.getStatsFile())
+    def getStatsPath(self):
+        return "static/election-data/{}/stats.json".format(self.year)
 	
 class Candidate(object):
     
@@ -35,6 +35,3 @@ class Candidate(object):
         
     def getChronamFile(self):
         return "chronam-{}.json".format(self.last)
-        
-    def getStatsFile(self):
-        return "stats-{}.json".format(self.last)

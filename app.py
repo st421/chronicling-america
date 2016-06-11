@@ -20,18 +20,31 @@ app.logger.addHandler(h)
 def frontPage():
 	return render_template('index.html', form=SearchForm())
 	
+def loadChronamData(year, candidate):
+	with app.open_resource('static/election-data/{}/chronam-{}.json'.format(year, candidate)) as f:
+		return json.load(f)	
+	
 def loadElectionData(year):
 	with app.open_resource('static/election-data/{}/election.json'.format(year)) as f:
 		js = json.load(f)
 		e = Election(**js)
 		return e
 	
-@app.route('/getTimelineData/<topic>')
-def getTimelineData(topic):
-	#tl = Timeline(topic, retrieveData(timelineSearchParams(topic)))
+@app.route('/getTimelinePath/<year>/<name>/<state>')
+def getTimelinePath(year, name, state):
+	return render_template('timeline.html', year=year, name=name, state=state)
+	
+@app.route('/getTimelineData/<year>/<name>/<state>')
+def getTimelineData(year, name, state):
+	'''
+	js = loadChronamData(year, name)
+	for item in js:
+		if(item.state[0] is state)
+	'''
+	tl = Timeline(year, name, loadChronamData(year, name))
 	timeline_data = {}
-	#timeline_data["title"] = tl.getTitleSlide()
-	#timeline_data["events"] = tl.getEventSlides()
+	timeline_data["title"] = tl.getTitleSlide()
+	timeline_data["events"] = tl.getEventSlides()
 	return jsonify(timeline_data)
 
 @app.route('/', methods=['GET','POST'])
