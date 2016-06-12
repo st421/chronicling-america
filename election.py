@@ -1,10 +1,10 @@
-from flask import current_app
+#from flask import current_app
 from math import floor
 
 class Election(object):
 
     def __init__(self, year, candidates, winner):
-        current_app.logger.debug("Gathering data for election year: %s", year)
+        #current_app.logger.debug("Gathering data for election year: %s", year)
         
         self.year = year
         self.candidates = []
