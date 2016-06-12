@@ -7,14 +7,16 @@
 <div id="candidates" class="center">
   <h4 class="center">the election of <span class="year">{{e.year}}</span></h4>
   {% for candidate in e.candidates %}
-  <div class="candidate"><div class="party {{candidate.color}}"></div><h6>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}</div>
+    <div class="candidate"><div class="party {{candidate.color}}"></div>
+    <h6{% if e.winner == candidate.last %} class="winner-{{candidate.color}}"{% endif %}>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}
+    </div>
   {% endfor %}
 </div>
-<svg id="map" class="center"><g id="states"></g></svg>
+<div id="map" class="center"><svg><g id="states"></g></svg></div>
 <script>
   var year = {{e.year}};
   var svgStates = d3.select("svg #states");
-  var width = window.innerWidth,height = window.innerHeight;
+  //var width = window.innerWidth,height = window.innerHeight;
   var projection = d3.geo.albersUsa().scale(1100);
   var path = d3.geo.path().projection(projection);
   var us_elements;

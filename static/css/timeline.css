@@ -21,7 +21,7 @@
 	text-decoration: none;  
 }
 .tl-timeline a:hover {
-    color:#8DD4E3;
+    color:#ACE0EB;
     text-decoration:underline;
 }
 .tl-text .tl-headline-date, .tl-text h3.tl-headline-date {
@@ -38,8 +38,8 @@
     padding-right:30px;
 }
 .tl-slide.tl-slide-titleslide h2.tl-headline-title {
-    font-size:50px;
-    color:#FF3B3F;
+    color:#474747;
+    font-size:24px;
 }
 .tl-slidenav-previous .tl-slidenav-content-container .tl-slidenav-icon, .tl-slidenav-next .tl-slidenav-content-container .tl-slidenav-icon {
     color:#FF3B3F;
@@ -48,8 +48,8 @@
     padding:2px;
 }
 .tl-timemarker.tl-timemarker-active .tl-timemarker-content-container {
-    background-color:#CAEBF2;
+    background-color:#ACE0EB;
 }
 .tl-timemarker .tl-timemarker-line-left:after, .tl-timemarker .tl-timemarker-line-right:after {
-    background-color:#CAEBF2;
+    background-color:#ACE0EB;
 }

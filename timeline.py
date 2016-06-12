@@ -3,10 +3,11 @@ from flask import current_app
 
 class Timeline(object):
 
-    def __init__(self, year, candidate, items):
-        current_app.logger.debug("Creating timeline for %s in %s", candidate, year)
+    def __init__(self, year, name, state, items):
         
-        self.titleSlide = TimelineSlide('{} | {}'.format(candidate, year))
+        current_app.logger.debug("Creating timeline for %s in %s", name, year)
+        
+        self.titleSlide = TimelineSlide('{} newspaper coverage of <span class="{}">{}</span> | <span class="year">{}</span>'.format(state, "blue", name, year))
         self.event_list = []
         
         for page in items:
@@ -57,8 +58,9 @@ class TimelineEvent(TimelineSlide):
         self.date_dict["day"] = date[6:8]
 
     def constructHeadline(self, pageId, pageNum, paperName):
-        return "<a href='{}{}'>Page {} from the {}</a>".format(getBaseUrl(), pageId, pageNum, paperName)
+        return "<a href='{}{}'>{}</a>".format(getBaseUrl(), pageId, paperName)
         #self.textDict["text"] = item["ocr_eng"]
 
     def addMedia(self, seqId):
         self.media_dict["url"] = '{}{}.pdf'.format(getBaseUrl(), seqId[:-1])
+        current_app.logger.debug(self.media_dict["url"])

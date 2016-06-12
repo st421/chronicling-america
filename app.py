@@ -41,7 +41,7 @@ def getTimelinePath(year, name, state):
 	
 @app.route('/getTimelineData/<year>/<name>/<state>')
 def getTimelineData(year, name, state):
-	tl = Timeline(year, name, loadChronamData(year, name, state))
+	tl = Timeline(year, name, state, loadChronamData(year, name, state))
 	timeline_data = {}
 	timeline_data["title"] = tl.getTitleSlide()
 	timeline_data["events"] = tl.getEventSlides()

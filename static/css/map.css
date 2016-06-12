@@ -7,6 +7,11 @@ svg, g {
     padding:0;
 }
 #map {
+    width:900px;
+    height:500px;
+    margin:auto;
+}
+#map svg {
     width:100%;
     height:100%;
     padding:0;
@@ -24,13 +29,21 @@ div.candidate {
     padding-left:20px;
     display:inline-block;
 }
+.winner-red {
+    padding-bottom:2px;
+    border-bottom:2px solid #FF3B3F;
+}
+.winner-blue {
+    padding-bottom:2px;
+    border-bottom:2px solid #ACE0EB;
+}
 .red {
     fill:#FF3B3F;
     background-color:#FF3B3F;
 }
 .blue {
-    fill:#CAEBF2;
-    background-color:#CAEBF2;
+    fill:#ACE0EB;
+    background-color:#ACE0EB;
 }
 circle {
     fill-opacity:.6;
