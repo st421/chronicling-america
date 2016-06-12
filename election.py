@@ -2,6 +2,15 @@
 from math import floor
 
 class Election(object):
+    red = "red"
+    blue = "blue"
+    
+    party_colors = {
+        "Democratic":blue,
+        "Whig":red,
+        "Republican":red,
+        "Progressive":red
+    }
 
     def __init__(self, year, candidates, winner):
         #current_app.logger.debug("Gathering data for election year: %s", year)
@@ -9,7 +18,9 @@ class Election(object):
         self.year = year
         self.candidates = []
         for candidate in candidates:
-            self.candidates.append(Candidate(**candidate))
+            c = Candidate(**candidate)
+            c.setColor(Election.getColor(c.party))
+            self.candidates.append(c)
         self.winner = winner
         
     def getCensusYear(self):
@@ -23,6 +34,10 @@ class Election(object):
         
     def getStatsPath(self):
         return "static/election-data/{}/stats.json".format(self.year)
+        
+    @staticmethod
+    def getColor(party):
+        return Election.party_colors[party]
 	
 class Candidate(object):
     
@@ -32,6 +47,9 @@ class Candidate(object):
         self.party = party
         self.state = state
         self.won = won
+        
+    def setColor(self, color):
+        self.color = color
         
     def getChronamFile(self):
         return "chronam-{}.json".format(self.last)

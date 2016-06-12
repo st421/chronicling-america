@@ -7,7 +7,7 @@
 <div id="candidates" class="center">
   <h4 class="center">the election of <span class="year">{{e.year}}</span></h4>
   {% for candidate in e.candidates %}
-  <div class="candidate"><div class="party"></div><h6>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}</div>
+  <div class="candidate"><div class="party {{candidate.color}}"></div><h6>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}</div>
   {% endfor %}
 </div>
 <svg id="map" class="center"><g id="states"></g></svg>
@@ -15,7 +15,7 @@
   var year = {{e.year}};
   var svgStates = d3.select("svg #states");
   var width = window.innerWidth,height = window.innerHeight;
-  var projection = d3.geo.albersUsa().translate([width/2,height/2]);
+  var projection = d3.geo.albersUsa().scale(1100);
   var path = d3.geo.path().projection(projection);
   var us_elements;
   d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").await(makeMap);
@@ -29,35 +29,37 @@
   
   function addStats(error, stats) {
     if(error) { console.log(error); }
-    var color = "blue";
     var max = stats[0].mentions.max;
     for(i=0; i<stats.length; i++) {
       stat = stats[i];
       if(stat.mentions.max > max) max = stat.mentions.max;
     }
+    {% for candidate in e.candidates %}
     for(i=0; i<stats.length; i++) {
-      if(i%2==1) {
-        color = "red";
+      if(stats[i].candidate == "{{candidate.last}}") {
+        addBubbles(stat.candidate, stat.mentions, "{{candidate.color}}", max, i);
       }
-      stat = stats[i];
-      addBubbles(stat.candidate, stat.mentions, color, max);
     }
+    {% endfor %}
   }
   
-  function addBubbles(c, m, color, max) {
+  function addBubbles(c, m, color, max, i) {
     svgStates.append("g").selectAll("a")
       .data(us_elements.features).enter().append("a")
       .attr("xlink:href", function(d) { var path = "getTimelinePath/".concat(year).concat("/").concat(c).concat("/").concat(d.properties.name); return path;})
       .append("circle")
-      .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, getRadius(d, m, max)) + ")"; })
       .attr("r", function(d) { return getRadius(d, m, max); })
       .attr("class",color)
       .append("title").text(function(d) { return d.properties.name + "\nClick for timeline of coverage";});
   }
   
-  function adjustCenter(c, amt) {
-    console.log(c);
-    return [c[0],c[1] - amt];
+  function adjustCenter(c, i, amt) {
+    if(i == 0) {
+      return [c[0],c[1] - amt];
+    } else {
+      return [c[0],c[1] + amt];
+    }
   }
   
   function getRadius(us_element, data_set, max) {
@@ -77,6 +79,19 @@
       class_name = "territory";
     }
     return class_name;
+  }
+  
+  function getPartyColor(party) {
+    var red = "red";
+    var blue = "blue"; 
+    
+    var party_colors = {
+        "Democratic":blue,
+        "Whig":red,
+        "Republican":red,
+        "Progressive":red
+    }
+    return party_colors[party];
   }
 </script>
 {% endblock %}

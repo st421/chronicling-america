@@ -29,6 +29,10 @@ def loadElectionData(year):
 		js = json.load(f)
 		e = Election(**js)
 		return e
+		
+@app.route('/getPartyColor/<party>')
+def getPartyColor(party):
+	return Election.getColor(party)
 	
 @app.route('/getTimelinePath/<year>/<name>/<state>')
 def getTimelinePath(year, name, state):
@@ -36,11 +40,6 @@ def getTimelinePath(year, name, state):
 	
 @app.route('/getTimelineData/<year>/<name>/<state>')
 def getTimelineData(year, name, state):
-	'''
-	js = loadChronamData(year, name)
-	for item in js:
-		if(item.state[0] is state)
-	'''
 	tl = Timeline(year, name, loadChronamData(year, name))
 	timeline_data = {}
 	timeline_data["title"] = tl.getTitleSlide()
