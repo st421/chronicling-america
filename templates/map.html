@@ -37,6 +37,7 @@
     {% for candidate in e.candidates %}
     for(i=0; i<stats.length; i++) {
       if(stats[i].candidate == "{{candidate.last}}") {
+        stat = stats[i];
         addBubbles(stat.candidate, stat.mentions, "{{candidate.color}}", max, i);
       }
     }
@@ -51,7 +52,7 @@
       .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, getRadius(d, m, max)) + ")"; })
       .attr("r", function(d) { return getRadius(d, m, max); })
       .attr("class",color)
-      .append("title").text(function(d) { return d.properties.name + "\nClick for timeline of coverage";});
+      .append("title").text(function(d) { return "See " + d.properties.name + " coverage of " + c;});
   }
   
   function adjustCenter(c, i, amt) {

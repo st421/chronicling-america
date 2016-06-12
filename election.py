@@ -52,4 +52,4 @@ class Candidate(object):
         self.color = color
         
     def getChronamFile(self):
-        return "chronam-{}.json".format(self.last)
+        return "chronam_{}.json".format(self.last)
