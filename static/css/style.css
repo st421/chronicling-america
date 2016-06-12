@@ -1,3 +1,12 @@
+/*
+#CAEBF2 -- lightest blue
+#8DD4E3 -- light blue
+#C3C3C3 -- light gray
+#A9A9A9 -- gray
+#474747 -- carbon
+#FF3B3F -- watermelon
+#EFEFEF -- neutral
+*/
 body, html {
     height:100%;
     padding:0px;
@@ -7,20 +16,24 @@ body {
     font-family:'Montserrat', sans-serif;
     background-color:#EFEFEF;
 }
+h4, h5, h6 {
+    display:inline;
+}
 h4 {
     color:#474747;
     font-size:24px;
-    line-height:24px;
 }
 h5, span.year {
-    color:#FF3B3F;
     font-family:'Fjalla One', sans-serif;
     font-size:30px;
     line-height:30px; 
 }
+span.year {
+    color:#C3C3C3;
+}
 h6 {
-    font-size:16px;
-    color:#CAEBF2;
+    font-size:18px;
+    color:#C3C3C3;
 }
 .center {
     text-align:center;
