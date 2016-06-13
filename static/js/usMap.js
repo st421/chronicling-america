@@ -110,3 +110,9 @@ function us_map() {
     return party_colors[party];
   }
 }
+
+d3.csv("sp500.csv", function(data) {
+  d3.select("#example")
+      .datum(data)
+      .call(chart);
+});

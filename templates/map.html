@@ -26,7 +26,7 @@
   function makeMap(error, usMap) {
     if(error) { console.log(error); }
     us_elements = topojson.feature(usMap, usMap.objects.stdin);
-    svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return isState(d); });
+    svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return getClass(d); });
   }
   
   function addStats(error, stats) {
@@ -74,7 +74,7 @@
     }
   }
   
-  function isState(us_element) {
+  function getClass(us_element) {
     var class_name, admit = us_element.properties.admit; 
     if(admit != 0 && admit <= year) {
       class_name = "state";
