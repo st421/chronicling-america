@@ -1,36 +1,49 @@
-{% extends "main_layout.html" %}
-{% block body %}
-<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="//d3js.org/topojson.v1.min.js"></script>
-<script src="//d3js.org/d3-queue.v2.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/map.css') }}">
-<div id="candidates" class="center">
-  <h4 class="center">the election of <span class="year">{{e.year}}</span></h4>
-  {% for candidate in e.candidates %}
-    <div class="candidate"><div class="party {{candidate.color}}"></div>
-    <h6{% if e.winner == candidate.last %} class="winner-{{candidate.color}}"{% endif %}>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}
-    </div>
-  {% endfor %}
-</div>
-<div id="map" class="center"><svg><g id="states"></g></svg></div>
-<script>
-  var year = {{e.year}};
+function us_map() {
+  var width = 720, // default width
+      height = 80; // default height
+
+  function my() {
+    // generate chart here, using `width` and `height`
+  }
+
+  my.width = function(value) {
+    if (!arguments.length) return width;
+    width = value;
+    return my;
+  };
+
+  my.height = function(value) {
+    if (!arguments.length) return height;
+    height = value;
+    return my;
+  };
+
+  return my;
+  
+  
+    var year = {{e.year}};
+  console.log(year);
   var svgStates = d3.select("svg #states");
   //var width = window.innerWidth,height = window.innerHeight;
   var projection = d3.geo.albersUsa().scale(1100);
   var path = d3.geo.path().projection(projection);
-  var us_elements;
-  d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").await(makeMap);
-  d3_queue.queue().defer(d3.json, "{{e.getStatsPath()}}").await(addStats);
+  var us_map = loadJson("{{e.getMapPath()}}");
+  var us_elements = topojson.feature(us_map, us_map.objects.stdin);
+  drawMap(us_elements);
+  addStats(loadJson("{{e.getStatsPath()}}"));
+  
+  function loadJson(path) {
+    d3.json(path, function(error, items) {
+      if (error) return console.error(error);
+      return items;
+    });
+  }
 
-  function makeMap(error, usMap) {
-    if(error) { console.log(error); }
-    us_elements = topojson.feature(usMap, usMap.objects.stdin);
+  function drawMap(us_elements) {
     svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return isState(d); });
   }
   
-  function addStats(error, stats) {
-    if(error) { console.log(error); }
+  function addStats(stats) {
     var max = stats[0].mentions.max;
     for(i=0; i<stats.length; i++) {
       stat = stats[i];
@@ -96,5 +109,4 @@
     }
     return party_colors[party];
   }
-</script>
-{% endblock %}
+}

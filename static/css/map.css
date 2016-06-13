@@ -49,7 +49,7 @@ circle {
     fill-opacity:.6;
 }
 #states a :hover {
-    fill-opacity:.8;
+    fill-opacity:1;
 }
 #states path {
     stroke:#EFEFEF;
