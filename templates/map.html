@@ -19,18 +19,17 @@
   //var width = window.innerWidth,height = window.innerHeight;
   var projection = d3.geo.albersUsa().scale(1100);
   var path = d3.geo.path().projection(projection);
-  var us_elements;
-  d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").await(makeMap);
-  d3_queue.queue().defer(d3.json, "/getCurrentElectionJson").await(addElectionData);
-
-  function makeMap(error, usMap) {
-    if(error) { console.log(error); }
-    us_elements = topojson.feature(usMap, usMap.objects.stdin);
-    svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return isState(d); });
+  var map = loadJson("{{e.getMapPath()}}");
+  var election_data = loadJson("/getCurrentElectionJson");
+  var us_elements = topojson.feature(map, map.objects.stdin);
+  
+  makeMap(us_elements, election_data);
+  
+  function makeMap(usMap, election) {
+    svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return class_name(d, election.candidates); });
   }
   
-  function addElectionData(error, election) {
-    if(error) { console.log(error); }
+  function addElectionData(election) {
     var max = election.max;
     var candidates = election.candidates;
     for(i=0; i<candidates.length; i++) {
@@ -39,15 +38,19 @@
     }
   }
   
-  function addBubbles(c, m, color, max, i) {
+  function addBubbles(candidate, max, i) {
     svgStates.append("g").selectAll("a")
       .data(us_elements.features).enter().append("a")
-      .attr("xlink:href", function(d) { var path = "getTimelinePath/".concat(year).concat("/").concat(c).concat("/").concat(d.properties.name); return path;})
+      .attr("xlink:href", function(d) { return timelineLink(year, candidate.last, d);})
       .append("circle")
-      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, getRadius(d, m, max)) + ")"; })
-      .attr("r", function(d) { return getRadius(d, m, max); })
-      .attr("class",color)
-      .append("title").text(function(d) { return "See " + d.properties.name + " coverage of " + c;});
+      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, getRadius(getMentions(d, candidate.mentions), max)) + ")"; })
+      .attr("r", function(d) { return getRadius(getMentions(d, candidate.mentions),max); })
+      .attr("class",candidate.color)
+      .append("title").text(function(d) { return "See " + d.properties.name + " coverage of " + candidate.last;});
+  }
+  
+  function timelineLink(year, last_name, element) {
+    return "getTimelinePath/".concat(year).concat("/").concat(last_name).concat("/").concat(element.properties.name);
   }
   
   function adjustCenter(c, i, amt) {
@@ -58,36 +61,41 @@
     }
   }
   
-  function getRadius(us_element, data_set, max) {
-    var radius = d3.scale.sqrt().domain([0, max]).range([5, 20]);
-    if(data_set.hasOwnProperty(us_element.id)) {
-      return radius(data_set[us_element.id]);
+  function getMentions(us_element, mentions) {
+    if(mentions.hasOwnProperty(us_element.id)) {
+      return mentions[us_element.id];
     } else {
       return 0;
     }
   }
   
-  function isState(us_element) {
+  function getRadius(r, max) {
+    var radius = d3.scale.sqrt().domain([0, max]).range([5, 20]);
+    return radius(r);
+  }
+  
+  function class_name(us_element, candidates) {
     var class_name, admit = us_element.properties.admit; 
     if(admit != 0 && admit <= year) {
       class_name = "state";
     } else {
       class_name = "territory";
     }
+    for (int i=0;i<candidates.length;i++) {
+      var candidate = candidates[i];
+      if(candidate.mentions.hasOwnProperty(us_element.properties.abbrev)) {
+        class_name += "-";
+        class_name += candidate.color;
+      }
+    }
     return class_name;
   }
   
-  function getPartyColor(party) {
-    var red = "red";
-    var blue = "blue"; 
-    
-    var party_colors = {
-        "Democratic":blue,
-        "Whig":red,
-        "Republican":red,
-        "Progressive":red
-    }
-    return party_colors[party];
+  function loadJson(path) {
+    d3.json(path, function(error, items) {
+      if (error) return console.error(error);
+      return items;
+    });
   }
 </script>
 {% endblock %}
