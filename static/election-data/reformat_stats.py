@@ -2,27 +2,22 @@ import os
 import json
 from election import Election
 
-def writeStats(election): 
-    stats = []
-    for candidate in election.candidates:
-        cStats = loadCandidateStats(election.year, candidate.last)
-        candidate_stats = {}
-        candidate_stats["candidate"] = candidate.last
-        candidate_stats["mentions"] = cStats
-        stats.append(candidate_stats)
-    with open('static/election-data/{}/stats.json'.format(election.year), 'w') as f:
-        json.dump(stats,f)
+def writeStats(year, election, stats): 
+    for candidate in election["candidates"]:
+        for stat in stats:
+            if stat["candidate"] == candidate["last"]:
+                candidate["mentions"] = stat["mentions"]
+    print(election)
+    with open('static/election-data/{}/election-stats.json'.format(i), 'w') as f:
+        json.dump(election,f)
         
-def loadCandidateStats(year, candidate):
-    with open('static/election-data/{}/stats-{}.json'.format(year,candidate)) as f: 
-        js = json.load(f)
-        return js
+def loadStats(year):
+    with open('static/election-data/{}/stats.json'.format(year)) as f: 
+        return json.load(f)
 
 def loadElectionData(year):
 	with open('static/election-data/{}/election.json'.format(year)) as f:
-		js = json.load(f)
-		e = Election(**js)
-		return e
+		return json.load(f)
 		
-for i in range(1840,1924,4):
-    writeStats(loadElectionData(i))
+for i in range(1836,1924,4):
+    writeStats(i, loadElectionData(i), loadStats(i))
