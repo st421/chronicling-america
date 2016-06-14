@@ -25,12 +25,13 @@ def loadChronamData(year, candidate, state):
 def loadElectionData(year):
 	with app.open_resource('static/election-data/{}/election-stats.json'.format(year)) as f:
 		js = json.load(f)
-		e = Election(**js)
 		app.current_election_json = Election.addData(js)
+		e = Election(**js)
 		return e
 		
 @app.route('/getCurrentElectionJson')
 def getCurrentElectionJson():
+	print (app.current_election_json)
 	return jsonify(app.current_election_json)
 	
 @app.route('/getTimelinePath/<year>/<name>/<state>')

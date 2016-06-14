@@ -19,7 +19,6 @@ class Election(object):
         self.candidates = []
         for candidate in candidates:
             c = Candidate(**candidate)
-            c.setColor(Election.getColor(c.party))
             self.candidates.append(c)
         self.winner = winner
         
@@ -31,9 +30,6 @@ class Election(object):
         
     def getCandidateChronamPath(self, candidate):
         return "static/election-data/{}/{}".format(self.year, candidate.getChronamFileName())
-        
-    def getStatsPath(self):
-        return "static/election-data/{}/stats.json".format(self.year)
         
     @staticmethod
     def getColor(party):
@@ -51,14 +47,12 @@ class Election(object):
 	
 class Candidate(object):
     
-    def __init__(self, first, last, party, state, won, mentions):
+    def __init__(self, first, last, party, state, won, color, mentions):
         self.first = first
         self.last = last
         self.party = party
         self.state = state
         self.won = won
-        
-    def setColor(self, color):
         self.color = color
 
     def getChronamFileName(self):

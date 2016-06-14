@@ -19,32 +19,30 @@
   //var width = window.innerWidth,height = window.innerHeight;
   var projection = d3.geo.albersUsa().scale(1100);
   var path = d3.geo.path().projection(projection);
-  var map = loadJson("{{e.getMapPath()}}");
-  var election_data = loadJson("/getCurrentElectionJson");
-  var us_elements = topojson.feature(map, map.objects.stdin);
-  console.log(election_data);
-  makeMap(us_elements, election_data);
+  d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").defer(d3.json, "/getCurrentElectionJson").await(makeMap);
   
-  function makeMap(usMap, election) {
-    svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return class_name(d, election.candidates); });
+  function makeMap(error, map, election) {
+    var map_elements = topojson.feature(map, map.objects.stdin);
+    svgStates.selectAll("path").data(map_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return class_name(d, election.candidates); });
+    addElectionData(map_elements, election);
   }
   
-  function addElectionData(election) {
+  function addElectionData(map_elements, election) {
     var max = election.max;
     var candidates = election.candidates;
     for(i=0; i<candidates.length; i++) {
       candidate = candidates[i];
-      addBubbles(candidate, max, i);
+      addBubbles(map_elements, candidate, max, i);
     }
   }
   
-  function addBubbles(candidate, max, i) {
+  function addBubbles(map_elements, candidate, max, i) {
     svgStates.append("g").selectAll("a")
-      .data(us_elements.features).enter().append("a")
+      .data(map_elements.features).enter().append("a").filter(function(d) { return d.id in candidate.mentions; })
       .attr("xlink:href", function(d) { return timelineLink(year, candidate.last, d);})
       .append("circle")
-      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, getRadius(getMentions(d, candidate.mentions), max)) + ")"; })
-      .attr("r", function(d) { return getRadius(getMentions(d, candidate.mentions),max); })
+      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, radius(getMentions(d, candidate.mentions), max)) + ")"; })
+      .attr("r", function(d) { var r = radius(getMentions(d, candidate.mentions), max); return r; })
       .attr("class",candidate.color)
       .append("title").text(function(d) { return "See " + d.properties.name + " coverage of " + candidate.last;});
   }
@@ -62,16 +60,16 @@
   }
   
   function getMentions(us_element, mentions) {
-    if(mentions.hasOwnProperty(us_element.id)) {
+    if(us_element.id in mentions) {
       return mentions[us_element.id];
     } else {
       return 0;
     }
   }
   
-  function getRadius(r, max) {
-    var radius = d3.scale.sqrt().domain([0, max]).range([5, 20]);
-    return radius(r);
+  function radius(r, max) {
+    var rad = d3.scale.sqrt().domain([0, max]).range([5, 20]);
+    return rad(r);
   }
   
   function class_name(us_element, candidates) {
@@ -81,7 +79,7 @@
     } else {
       class_name = "territory";
     }
-    for (int i=0;i<candidates.length;i++) {
+    for (var i=0;i<candidates.length;i++) {
       var candidate = candidates[i];
       if(candidate.mentions.hasOwnProperty(us_element.properties.abbrev)) {
         class_name += "-";
@@ -89,13 +87,6 @@
       }
     }
     return class_name;
-  }
-  
-  function loadJson(path) {
-    d3.json(path, function(error, items) {
-      if (error) return console.error(error);
-      return items;
-    });
   }
 </script>
 {% endblock %}
