@@ -1,0 +1,100 @@
+{% extends "main_layout.html" %}
+{% block body %}
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script src="//d3js.org/d3-queue.v2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/map.css') }}">
+<div id="candidates" class="center">
+  <h4 class="center">the election of <span class="year">{{e.year}}</span></h4>
+  {% for candidate in e.candidates %}
+    <div class="candidate"><div class="party {{candidate.color}}"></div>
+    <h6{% if e.winner == candidate.last %} class="winner-{{candidate.color}}"{% endif %}>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}
+    </div>
+  {% endfor %}
+</div>
+<div id="map" class="center"><svg><g id="states"></g></svg></div>
+<script>
+  var year = {{e.year}};
+  var svgStates = d3.select("svg #states");
+  //var width = window.innerWidth,height = window.innerHeight;
+  var projection = d3.geo.albersUsa().scale(1100);
+  var path = d3.geo.path().projection(projection);
+  var us_elements;
+  d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").await(makeMap);
+  d3_queue.queue().defer(d3.json, "{{e.getStatsPath()}}").await(addStats);
+
+  function makeMap(error, usMap) {
+    if(error) { console.log(error); }
+    us_elements = topojson.feature(usMap, usMap.objects.stdin);
+    svgStates.selectAll("path").data(us_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return isState(d); });
+  }
+  
+  function addStats(error, stats) {
+    if(error) { console.log(error); }
+    var max = stats[0].mentions.max;
+    for(i=0; i<stats.length; i++) {
+      stat = stats[i];
+      if(stat.mentions.max > max) max = stat.mentions.max;
+    }
+    {% for candidate in e.candidates %}
+    for(i=0; i<stats.length; i++) {
+      if(stats[i].candidate == "{{candidate.last}}") {
+        stat = stats[i];
+        addBubbles(stat.candidate, stat.mentions, "{{candidate.color}}", max, i);
+      }
+    }
+    {% endfor %}
+  }
+  
+  function addBubbles(c, m, color, max, i) {
+    svgStates.append("g").selectAll("a")
+      .data(us_elements.features).enter().append("a")
+      .attr("xlink:href", function(d) { var path = "getTimelinePath/".concat(year).concat("/").concat(c).concat("/").concat(d.properties.name); return path;})
+      .append("circle")
+      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, getRadius(d, m, max)) + ")"; })
+      .attr("r", function(d) { return getRadius(d, m, max); })
+      .attr("class",color)
+      .append("title").text(function(d) { return "See " + d.properties.name + " coverage of " + c;});
+  }
+  
+  function adjustCenter(c, i, amt) {
+    if(i == 0) {
+      return [c[0],c[1] - amt];
+    } else {
+      return [c[0],c[1] + amt];
+    }
+  }
+  
+  function getRadius(us_element, data_set, max) {
+    var radius = d3.scale.sqrt().domain([0, max]).range([5, 20]);
+    if(data_set.hasOwnProperty(us_element.id)) {
+      return radius(data_set[us_element.id]);
+    } else {
+      return 0;
+    }
+  }
+  
+  function isState(us_element) {
+    var class_name, admit = us_element.properties.admit; 
+    if(admit != 0 && admit <= year) {
+      class_name = "state";
+    } else {
+      class_name = "territory";
+    }
+    return class_name;
+  }
+  
+  function getPartyColor(party) {
+    var red = "red";
+    var blue = "blue"; 
+    
+    var party_colors = {
+        "Democratic":blue,
+        "Whig":red,
+        "Republican":red,
+        "Progressive":red
+    }
+    return party_colors[party];
+  }
+</script>
+{% endblock %}

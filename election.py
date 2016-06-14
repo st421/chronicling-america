@@ -44,7 +44,6 @@ class Election(object):
         maximum = 0
         for candidate in js["candidates"]:
             candidate["color"] = Election.getColor(candidate["party"])
-            print(candidate)
             current_max = candidate["mentions"]["max"]
             if current_max > maximum: maximum = current_max
         js["max"] = maximum

@@ -22,7 +22,7 @@
   var map = loadJson("{{e.getMapPath()}}");
   var election_data = loadJson("/getCurrentElectionJson");
   var us_elements = topojson.feature(map, map.objects.stdin);
-  console.log(election_data);
+  
   makeMap(us_elements, election_data);
   
   function makeMap(usMap, election) {
@@ -34,7 +34,7 @@
     var candidates = election.candidates;
     for(i=0; i<candidates.length; i++) {
       candidate = candidates[i];
-      addBubbles(candidate, max, i);
+      addBubbles(candidate.last, candidate.mentions, candidate.color, max, i);
     }
   }
   
