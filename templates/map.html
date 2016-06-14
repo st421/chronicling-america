@@ -7,7 +7,7 @@
 <div id="candidates" class="center">
   <h4 class="center">the election of <span class="year">{{e.year}}</span></h4>
   {% for candidate in e.candidates %}
-    <div class="candidate"><div class="party {{candidate.color}}"></div>
+    <div class="candidate"><div class="party fill-{{candidate.color}}"></div>
     <h6{% if e.winner == candidate.last %} class="winner-{{candidate.color}}"{% endif %}>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}
     </div>
   {% endfor %}
@@ -23,7 +23,7 @@
   
   function makeMap(error, map, election) {
     var map_elements = topojson.feature(map, map.objects.stdin);
-    svgStates.selectAll("path").data(map_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return class_name(d, election.candidates); });
+    svgStates.selectAll("path").data(map_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return us_element_class(d); });
     addElectionData(map_elements, election);
   }
   
@@ -43,7 +43,7 @@
       .append("circle")
       .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, radius(getMentions(d, candidate.mentions), max)) + ")"; })
       .attr("r", function(d) { var r = radius(getMentions(d, candidate.mentions), max); return r; })
-      .attr("class",candidate.color)
+      .attr("class", function(d) {return bubble_class(d, candidate);})
       .append("title").text(function(d) { return "See " + d.properties.name + " coverage of " + candidate.last;});
   }
   
@@ -72,19 +72,21 @@
     return rad(r);
   }
   
-  function class_name(us_element, candidates) {
+  function bubble_class(us_element, candidate) {
+    var class_name = "fill-" + candidate.color;
+    if(candidate.won.includes(us_element.properties.abbrev)) {
+      class_name += " state-winner-";
+      class_name += candidate.color;
+    }
+    return class_name;
+  }
+  
+  function us_element_class(us_element) {
     var class_name, admit = us_element.properties.admit; 
     if(admit != 0 && admit <= year) {
       class_name = "state";
     } else {
       class_name = "territory";
-    }
-    for (var i=0;i<candidates.length;i++) {
-      var candidate = candidates[i];
-      if(candidate.mentions.hasOwnProperty(us_element.properties.abbrev)) {
-        class_name += "-";
-        class_name += candidate.color;
-      }
     }
     return class_name;
   }

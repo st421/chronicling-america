@@ -31,7 +31,6 @@ def loadElectionData(year):
 		
 @app.route('/getCurrentElectionJson')
 def getCurrentElectionJson():
-	print (app.current_election_json)
 	return jsonify(app.current_election_json)
 	
 @app.route('/getTimelinePath/<year>/<name>/<state>')
