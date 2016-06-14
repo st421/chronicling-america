@@ -1,21 +1,18 @@
 import os
 from flask import Flask, render_template, json, jsonify, request, flash, url_for, logging
-from werkzeug.contrib.cache import SimpleCache
 from logging import Formatter
-from utils import startRetrieve, candidateSearchParams
 from timeline import Timeline
 from forms import SearchForm
 from election import Election
-from map import makeStateCounts
 
 app = Flask(__name__)
 #TODO form security
 #TODO secret_key
 app.secret_key = 'some_secret'
-app.cache = SimpleCache(app)
 h = logging.StreamHandler()
 h.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
 app.logger.addHandler(h)
+app.current_election_json = {}
 
 def frontPage():
 	return render_template('index.html', form=SearchForm())
@@ -26,14 +23,15 @@ def loadChronamData(year, candidate, state):
 		return js[state]
 	
 def loadElectionData(year):
-	with app.open_resource('static/election-data/{}/election.json'.format(year)) as f:
+	with app.open_resource('static/election-data/{}/election-stats.json'.format(year)) as f:
 		js = json.load(f)
 		e = Election(**js)
+		app.current_election_json = Election.addData(js)
 		return e
 		
-@app.route('/getPartyColor/<party>')
-def getPartyColor(party):
-	return Election.getColor(party)
+@app.route('/getCurrentElectionJson')
+def getCurrentElectionJson():
+	return jsonify(app.current_election_json)
 	
 @app.route('/getTimelinePath/<year>/<name>/<state>')
 def getTimelinePath(year, name, state):

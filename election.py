@@ -1,4 +1,4 @@
-#from flask import current_app
+from flask import current_app
 from math import floor
 
 class Election(object):
@@ -12,8 +12,8 @@ class Election(object):
         "Progressive":red
     }
 
-    def __init__(self, year, candidates, winner):
-        #current_app.logger.debug("Gathering data for election year: %s", year)
+    def __init__(self, year, candidates, winner, max=0):
+        current_app.logger.debug("Gathering data for election year: %s", year)
         
         self.year = year
         self.candidates = []
@@ -30,7 +30,7 @@ class Election(object):
         return "static/map-data/json/{}.json".format(self.getCensusYear())
         
     def getCandidateChronamPath(self, candidate):
-        return "static/election-data/{}/{}".format(self.year, candidate.getChronamFile())
+        return "static/election-data/{}/{}".format(self.year, candidate.getChronamFileName())
         
     def getStatsPath(self):
         return "static/election-data/{}/stats.json".format(self.year)
@@ -38,10 +38,21 @@ class Election(object):
     @staticmethod
     def getColor(party):
         return Election.party_colors[party]
+        
+    @staticmethod
+    def addData(js):
+        maximum = 0
+        for candidate in js["candidates"]:
+            candidate["color"] = Election.getColor(candidate["party"])
+            print(candidate)
+            current_max = candidate["mentions"]["max"]
+            if current_max > maximum: maximum = current_max
+        js["max"] = maximum
+        return js
 	
 class Candidate(object):
     
-    def __init__(self, first, last, party, state, won):
+    def __init__(self, first, last, party, state, won, mentions):
         self.first = first
         self.last = last
         self.party = party
@@ -50,6 +61,6 @@ class Candidate(object):
         
     def setColor(self, color):
         self.color = color
-        
-    def getChronamFile(self):
+
+    def getChronamFileName(self):
         return "chronam_{}.json".format(self.last)
