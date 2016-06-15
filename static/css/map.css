@@ -50,15 +50,24 @@ svg, g {
     padding:0;
     margin:0;
     display:block;
-    fill:#A9A9A9;
 }
-#states path {
+#map svg #states {
+    fill:#A9A9A9;
     stroke:#EFEFEF;
     stroke-linejoin:round;
     stroke-linecap:round;
+    z-index:0;
 }
-.territory {
+#map svg #states .territory {
     fill:#C3C3C3;
+}
+.pie {
+    fill:#ACE0EB;
+    stroke:#fff;
+    z-index:1;
+}
+.pie .fill-blue {
+    fill:#ACE0EB;
 }
 a circle {
 /*    stroke-opacity:.8;

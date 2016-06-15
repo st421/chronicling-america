@@ -15,7 +15,7 @@
 <div id="map" class="center"><svg><g id="states"></g></svg></div>
 <script>
   var year = {{e.year}};
-  var svgStates = d3.select("svg #states");
+  var states = d3.select("#map svg #states");
   //var width = window.innerWidth,height = window.innerHeight;
   var projection = d3.geo.albersUsa().scale(1100);
   var path = d3.geo.path().projection(projection);
@@ -23,28 +23,55 @@
   
   function makeMap(error, map, election) {
     var map_elements = topojson.feature(map, map.objects.stdin);
-    svgStates.selectAll("path").data(map_elements.features).enter().append("path").attr("d", path).attr("class",function(d) { return us_element_class(d); });
-    addElectionData(map_elements, election);
+    states.selectAll("path").data(map_elements.features).enter().append("path")
+      .attr("d",path)
+      .attr("class",function(d) { return us_element_class(d); })
+      .attr("alt",function(d) { return d.id; });
+    addPies(map_elements, election);
   }
   
-  function addElectionData(map_elements, election) {
-    var max = election.max;
-    var candidates = election.candidates;
-    for(i=0; i<candidates.length; i++) {
-      candidate = candidates[i];
-      addBubbles(map_elements, candidate, max, i);
+  function addPies(map_elements, election) {
+    var g = states.selectAll(".pie").data(map_elements.features.filter(function(d) { return isMentioned(d, election.candidates); }))
+      .enter().append("svg").attr("class","pie").each(addPie).select("g");
+      
+    function addPie(d) {
+      var pie = d3.layout.pie().sort(null).value(function(c) { return getMentions(d, c.mentions); });
+      var r = radius(totalMentions(d,election.candidates), election.max);
+      var diam = 2*r;
+      var arc = d3.svg.arc().outerRadius(r).innerRadius(0); 
+      
+      var pie_svg = d3.select(this).attr("width", diam).attr("height", diam).append("g").attr("transform", "translate("+path.centroid(d)+")");//.attr("alt","")
+      pie_svg.selectAll(".arc").data(pie(election.candidates))
+        .enter().append("path").attr("class", "arc").attr("d", arc)
+        .attr("style","fill:#FF3B3F");
+        //.attr("class",function(c) { return "fill-"+c.data.color; });
     }
   }
   
-  function addBubbles(map_elements, candidate, max, i) {
-    svgStates.append("g").selectAll("a")
-      .data(map_elements.features).enter().append("a").filter(function(d) { return d.id in candidate.mentions; })
-      .attr("xlink:href", function(d) { return timelineLink(year, candidate.last, d);})
-      .append("circle")
-      .attr("transform", function(d) { return "translate(" + adjustCenter(path.centroid(d), i, radius(getMentions(d, candidate.mentions), max)) + ")"; })
-      .attr("r", function(d) { var r = radius(getMentions(d, candidate.mentions), max); return r; })
-      .attr("class", function(d) {return bubble_class(d, candidate);})
-      .append("title").text(function(d) { return "See " + d.properties.name + " coverage of " + candidate.last;});
+
+    
+    /*
+                        .each(function(d, i) {
+                        d3.select(this).selectAll('path.area')
+                                .data([d])
+                            .enter()
+                                .append('path')
+    
+        //.attr("xlink:href", function(d) { return timelineLink(year, candidate.last, d);})
+        //.append("circle")
+        .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+        //.attr("r", function(d) { var r = radius(getMentions(d, candidate.mentions), max); return r; })
+        //.attr("class", function(d) {return bubble_class(d, candidate);})
+        //.append("title").text(function(d) { return "See " + d.properties.name + " coverage of " + candidate.last;});
+        */
+
+  
+  function isMentioned(us_element, candidates) {
+    for(var i = 0; i < candidates.length; i++) {
+      var c = candidates[i];
+      if(us_element.id in c.mentions) return true;
+    }
+    return false;
   }
   
   function timelineLink(year, last_name, element) {
@@ -57,6 +84,14 @@
     } else {
       return [c[0],c[1] + amt];
     }
+  }
+  
+  function totalMentions(us_element, candidates) {
+    var total = 0;
+    for(var i=0; i < candidates.length; i++) {
+      total += getMentions(us_element, candidates[i].mentions)
+    }
+    return total;
   }
   
   function getMentions(us_element, mentions) {
