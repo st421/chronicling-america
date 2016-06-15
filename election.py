@@ -41,7 +41,6 @@ class Election(object):
         state_maxes = {}
         for candidate in js["candidates"]:
             candidate["color"] = Election.getColor(candidate["party"])
-            print(candidate["mentions"])
             for state,count in candidate["mentions"].iteritems():
                 state_maxes[state] = state_maxes.get(state,0) + count
         js["max"] = sorted(state_maxes.values(), reverse=True)[0]
