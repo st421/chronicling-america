@@ -3,6 +3,7 @@ from math import floor
 from operator import itemgetter
 
 class Election(object):
+    last_map_year = 1910
     red = "red"
     blue = "blue"
     
@@ -24,6 +25,7 @@ class Election(object):
         self.winner = winner
         
     def getCensusYear(self):
+        if(int(self.year) > Election.last_map_year): return Election.last_map_year
         return int(floor(float(self.year)/10)*10)
     
     def getMapPath(self):
