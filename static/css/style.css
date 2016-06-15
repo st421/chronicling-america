@@ -22,7 +22,7 @@ h4, h5, h6 {
 }
 h4 {
     color:#474747;
-    font-size:24px;
+    font-size:26px;
 }
 h5, span.year {
     font-family:'Fjalla One', sans-serif;
@@ -33,7 +33,7 @@ span.year {
     color:#C3C3C3;
 }
 h6 {
-    font-size:18px;
+    font-size:20px;
     color:#C3C3C3;
 }
 .center {

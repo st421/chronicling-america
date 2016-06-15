@@ -60,14 +60,17 @@ svg, g {
 #map #states .territory {
     fill:#C3C3C3;
 }
-#map #pies {
-    fill-opacity:.6;
+#map #pies svg.pie {
+    fill-opacity:.7;
+    stroke-opacity:.7;
+    /*stroke-width:3px; */
 }
-a circle {
-/*    stroke-opacity:.8;
-    stroke-width:4px;*/
-
-}
-a circle:hover {
+#map #pies svg.pie g a.arc :hover {
     fill-opacity:1;
 }
+/*#map #pies svg.pie g.state-w-red {
+    stroke:#FF3B3F;
+}
+#map #pies svg.pie g.state-w-blue {
+    stroke:#ACE0EB;
+}*/
