@@ -37,5 +37,12 @@ h6 {
     color:#C3C3C3;
 }
 .center {
+    margin:auto;
+}
+.center-text {
     text-align:center;
+}
+#election-form {
+    width:30%;
+    padding:20px;
 }

@@ -1,8 +1,10 @@
 {% extends "main_layout.html" %}
 {% block body %}
+<div id="election-form" class="center">
 <h4>Choose an election year:</h4>
 <form method="POST" action="/">
 {{ form.year.label }} {{ form.year() }}
 {{ form.submit() }}
 </form>
+</div>
 {% endblock %}
