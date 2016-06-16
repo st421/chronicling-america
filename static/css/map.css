@@ -28,6 +28,10 @@ div.candidate {
     fill:#ACE0EB;
     background-color:#ACE0EB;
 }
+.fill-purple {
+    fill:#C647A5;
+    background-color:#C647A5;
+}
 svg, g {
     margin:0;
     padding:0;
@@ -67,9 +71,16 @@ svg, g {
 #map #pies svg.pie g a.arc :hover {
     fill-opacity:1;
 }
-/*#map #pies svg.pie g.state-w-red {
+#map #pies svg.pie g circle {
+    fill:none;
+    stroke-width:3px;
+}
+.state-w-red {
     stroke:#FF3B3F;
 }
-#map #pies svg.pie g.state-w-blue {
+.state-w-blue {
     stroke:#ACE0EB;
-}*/
+}
+.state-w-purple {
+    stroke:#C647A5;
+}

@@ -11,6 +11,7 @@
     <h6{% if e.winner == candidate.last %} class="winner-{{candidate.color}}"{% endif %}>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}
     </div>
   {% endfor %}
+    <div class="candidate"><div class="party fill-purple"></div>Third party</div>
 </div>
 <div id="container" class="center">
   <svg id="map"><g id="states"></g><g id="pies"></g></svg>
@@ -39,13 +40,14 @@ function addPies(map_elements, election) {
     .enter().append("svg").attr("class","pie").each(addPie).select("g");
       
   function addPie(d) {
-    var pie = d3.layout.pie().sort(null).value(function(c) { return getMentions(d, c.mentions); }).padAngle(.1);
+    var pie = d3.layout.pie().sort(null).value(function(c) { return getMentions(d, c.mentions); });
     var r = radius(totalMentions(d,election.candidates), election.max);
     var diam = 2*r;
     var arc = d3.svg.arc().outerRadius(r).innerRadius(r*0.4); 
     
     var pie_svg = d3.select(this).attr("width", diam).attr("height", diam)
-      .append("g").attr("transform", "translate("+path.centroid(d)+")").attr("class",pie_class(d, election.candidates));
+      .append("g").attr("transform", "translate("+path.centroid(d)+")");
+    pie_svg.append("circle").attr("r",r).attr("class",pie_class(d, election.candidates));
     pie_svg.selectAll(".arc").data(pie(election.candidates)).enter()
       .append("a").attr("xlink:href", function(c) { return timelineLink(year, c.data.last, d); }).attr("class", function(c) { return arc_class(c.data); })
       .append("path").attr("d", arc)
@@ -83,7 +85,7 @@ function getMentions(us_element, mentions) {
 }
   
 function radius(r, max) {
-  var rad = d3.scale.sqrt().domain([0, max]).range([6, 25]);
+  var rad = d3.scale.sqrt().domain([0, max]).range([10, 30]);
   return rad(r);
 }
 
@@ -92,14 +94,13 @@ function arc_class(c) {
 }
   
 function pie_class(el, cs) {
-  var class_name = "";
   for(var i=0; i < cs.length; i++) {
     var c = cs[i];
     if(c.won.includes(el.properties.abbrev)) {
-      class_name += "state-w-" + c.color;
+      return "state-w-" + c.color;
     }
   }
-  return class_name;
+  return "state-w-purple";
 }
 
 function us_element_class(us_element) {
