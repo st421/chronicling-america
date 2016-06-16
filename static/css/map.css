@@ -2,14 +2,15 @@
     margin:0;
     padding:20px 20px 40px 20px;
 }
-div.party {
+.party {
     width:15px;
     height:15px;
     display:inline-block;
-    margin-right:10px;
+    margin-right:5px;
+    margin-top:10px;
 }
-div.candidate {
-    padding-left:20px;
+.candidate {
+    padding-left:15px;
     display:inline-block;
 }
 .winner-red {
@@ -37,12 +38,6 @@ svg, g {
     padding:0;
     overflow:visible;
 }
-/*.state-winner-red {
-    stroke:#FF3B3F;
-}
-.state-winner-blue {
-    stroke:#ACE0EB;
-}*/
 #container {
     width:900px;
     height:500px;
@@ -63,15 +58,28 @@ svg, g {
 #map #states .territory {
     fill:#C3C3C3;
 }
-#map #pies svg.pie {
+#map #pies .pie {
     fill-opacity:.7;
     stroke-opacity:.7;
-    /*stroke-width:3px; */
 }
-#map #pies svg.pie g a.arc :hover {
+#map #pies .pie g .arc :hover {
     fill-opacity:1;
 }
-#map #pies svg.pie g circle {
+#map #pies .pie g .arc :hover .tooltip {
+    visibility: visible;
+}
+#map #pies .pie g .arc .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+}
+#map #pies .pie g circle {
     fill:none;
     stroke-width:3px;
 }

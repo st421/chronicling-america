@@ -51,7 +51,7 @@ function addPies(map_elements, election) {
     pie_svg.selectAll(".arc").data(pie(election.candidates)).enter()
       .append("a").attr("xlink:href", function(c) { return timelineLink(year, c.data.last, d); }).attr("class", function(c) { return arc_class(c.data); })
       .append("path").attr("d", arc)
-      .append("title").text(function(c) { return "See " + d.properties.name + " coverage of " + c.data.last; });
+      .append("title").text(function(c) { return d.properties.name + " | " + c.data.last + " | " + getMentions(d, c.data.mentions) + " front pages--click for timeline"; });
       //.attr("alt","")
   }
 }
