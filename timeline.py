@@ -34,8 +34,7 @@ class TimelineSlide(object):
         
     def addText(self, title):
         self.text_dict["headline"] = title
-        #self.textDict["text"] = item["ocr_eng"]
-        
+
     def getSlide(self):
         return self.event_dict
     
@@ -59,7 +58,6 @@ class TimelineEvent(TimelineSlide):
 
     def constructHeadline(self, pageId, pageNum, paperName):
         return "<a href='{}{}'>{}</a>".format(getBaseUrl(), pageId, paperName)
-        #self.textDict["text"] = item["ocr_eng"]
 
     def addMedia(self, seqId):
         self.media_dict["url"] = '{}{}.pdf'.format(getBaseUrl(), seqId[:-1])

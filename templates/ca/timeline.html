@@ -1,17 +1,14 @@
-{% extends "main_layout.html" %}
+{% extends "ca/layout.html" %}
 {% block body %}
 <div id="timeline"></div>
 <link rel="stylesheet" href="//cdn.knightlab.com/libs/timeline3/3.3.15/css/timeline.css">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/timeline.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('ca.static', filename='css/timeline.css') }}">
 <script type="text/javascript" src="//cdn.knightlab.com/libs/timeline3/3.3.15/js/timeline-min.js"></script>
 <script>
-	var year = {{year|safe}};
-	var candidate = "{{name|safe}}";
-	var state = "{{state|safe}}";
 	$(document).ready(function(){
 		var embed = document.getElementById("timeline");
 		embed.style.height = getComputedStyle(document.body).height;
-		$.getJSON("/getTimelineData/".concat(year).concat("/").concat(candidate).concat("/").concat(state),function(data){
+		$.getJSON("{{ url_for('ca.getTimelineData',year=year,name=name,state=state) }}",function(data){
 			var options = {
 				timenav_height_percentage:15, 
 				timenav_height_min:100, 

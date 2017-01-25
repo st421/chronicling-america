@@ -1,9 +1,9 @@
-{% extends "main_layout.html" %}
+{% extends "ca/layout.html" %}
 {% block body %}
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script src="//d3js.org/d3-queue.v2.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/map.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('ca.static', filename='css/map.css') }}">
 <div id="candidates" class="center-text">
   <h4>the election of <span class="year">{{e.year}}</span></h4>
   {% for candidate in e.candidates %}
@@ -23,7 +23,7 @@ var pies = d3.select("#map #pies");
 //var width = window.innerWidth,height = window.innerHeight;
 var projection = d3.geo.albersUsa().scale(1200);
 var path = d3.geo.path().projection(projection);
-d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").defer(d3.json, "/getCurrentElectionJson").await(makeMap);
+d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").defer(d3.json, "{{ url_for('ca.getCurrentElectionJson') }}").await(makeMap);
 
 function makeMap(error, map, election) {
   if(error) console.log(error);
