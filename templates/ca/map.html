@@ -11,107 +11,30 @@
     <h6{% if e.winner == candidate.last %} class="winner-{{candidate.color}}"{% endif %}>{{candidate.first}} {{candidate.last}}</h6> | {{candidate.party}}
     </div>
   {% endfor %}
-    <div class="candidate"><div class="party fill-purple"></div>Third party</div>
+  <div class="candidate"><div class="party fill-purple"></div>Third party</div>
 </div>
 <div id="container" class="center">
   <svg id="map"><g id="states"></g><g id="pies"></g></svg>
 </div>
+<script src="{{ url_for('ca.static', filename='js/map.js') }}"></script>
 <script>
 var year = {{e.year}};
 var states = d3.select("#map #states");
 var pies = d3.select("#map #pies");
-//var width = window.innerWidth,height = window.innerHeight;
 var projection = d3.geo.albersUsa().scale(1200);
 var path = d3.geo.path().projection(projection);
-d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}").defer(d3.json, "{{ url_for('ca.getCurrentElectionJson') }}").await(makeMap);
-
+d3_queue.queue().defer(d3.json, "{{e.getMapPath()}}")
+                .defer(d3.json, "{{ url_for('ca.getCurrentElectionJson') }}")
+                .await(makeMap);
+                
 function makeMap(error, map, election) {
   if(error) console.log(error);
   var map_elements = topojson.feature(map, map.objects.stdin);
   states.selectAll("path").data(map_elements.features).enter().append("path")
     .attr("d",path)
-    .attr("class",function(d) { return us_element_class(d); })
+    .attr("class",function(d) { return us_element_class(d, year); })
     .attr("alt",function(d) { return d.id; });
-  addPies(map_elements, election);
+  addPies(path, map_elements, pies, election);
 }
-
-function addPies(map_elements, election) {
-  var g = pies.selectAll(".pie").data(map_elements.features.filter(function(d) { return isMentioned(d, election.candidates); }))
-    .enter().append("svg").attr("class","pie").each(addPie).select("g");
-      
-  function addPie(d) {
-    var pie = d3.layout.pie().sort(null).value(function(c) { return getMentions(d, c.mentions); });
-    var r = radius(totalMentions(d,election.candidates), election.max);
-    var diam = 2*r;
-    var arc = d3.svg.arc().outerRadius(r).innerRadius(r*0.4); 
-    
-    var pie_svg = d3.select(this).attr("width", diam).attr("height", diam)
-      .append("g").attr("transform", "translate("+path.centroid(d)+")");
-    pie_svg.append("circle").attr("r",r).attr("class",pie_class(d, election.candidates));
-    pie_svg.selectAll(".arc").data(pie(election.candidates)).enter()
-      .append("a").attr("xlink:href", function(c) { return timelineLink(year, c.data.last, d); }).attr("class", function(c) { return arc_class(c.data); })
-      .append("path").attr("d", arc)
-      .append("title").text(function(c) { return d.properties.name + " | " + c.data.last + " | " + getMentions(d, c.data.mentions) + " front pages--click for timeline"; });
-      //.attr("alt","")
-  }
-}
-
-function isMentioned(us_element, candidates) {
-  for(var i = 0; i < candidates.length; i++) {
-    var c = candidates[i];
-    if(us_element.id in c.mentions) return true;
-  }
-  return false;
-}
-  
-function timelineLink(year, last_name, element) {
-  return "getTimelinePath/".concat(year).concat("/").concat(last_name).concat("/").concat(element.id);
-}
-  
-function totalMentions(us_element, candidates) {
-  var total = 0;
-  for(var i=0; i < candidates.length; i++) {
-    total += getMentions(us_element, candidates[i].mentions);
-  }
-  return total;
-}
-  
-function getMentions(us_element, mentions) {
-  if(us_element.id in mentions) {
-    return mentions[us_element.id];
-  } else {
-    return 0;
-  }
-}
-  
-function radius(r, max) {
-  var rad = d3.scale.sqrt().domain([0, max]).range([10, 30]);
-  return rad(r);
-}
-
-function arc_class(c) {
-  return "arc fill-"+c.color;
-}
-  
-function pie_class(el, cs) {
-  for(var i=0; i < cs.length; i++) {
-    var c = cs[i];
-    if(c.won.includes(el.properties.abbrev)) {
-      return "state-w-" + c.color;
-    }
-  }
-  return "state-w-purple";
-}
-
-function us_element_class(us_element) {
-  var class_name, admit = us_element.properties.admit; 
-  if(admit != 0 && admit <= year) {
-    class_name = "state";
-  } else {
-    class_name = "territory";
-  }
-  return class_name;
-}
-
 </script>
 {% endblock %}
