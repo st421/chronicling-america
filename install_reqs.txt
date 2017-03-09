@@ -1,5 +1,0 @@
-python
-flask
-requests
-grequests
-wtforms
